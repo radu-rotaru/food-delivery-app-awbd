@@ -1,6 +1,7 @@
 package web.javaproject.fooddeliveryapp.model;
 
 import jakarta.persistence.*;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.List;
 
@@ -34,13 +35,17 @@ public class Order {
     )
     private List<Dish> dishes;
 
+    @Value("#{T(java.util.Arrays).asList('processed', 'delivered', 'cancelled')}")
+    private String status;
+
     public Order() {}
 
-    public Order(Restaurant restaurant, Client client, Courier courier, List<Dish> dishes) {
+    public Order(Restaurant restaurant, Client client, Courier courier, List<Dish> dishes, String status) {
         this.restaurant = restaurant;
         this.client = client;
         this.courier = courier;
         this.dishes = dishes;
+        this.status = status;
     }
 
     public Long getId() {
@@ -82,4 +87,8 @@ public class Order {
     public void setDishes(List<Dish> dishes) {
         this.dishes = dishes;
     }
+
+    public String getStatus() { return status; }
+
+    public void setStatus(String status) { this.status = status; }
 }

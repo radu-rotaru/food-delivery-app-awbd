@@ -2,9 +2,13 @@ package web.javaproject.fooddeliveryapp.mapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import web.javaproject.fooddeliveryapp.dto.OrderDTO;
-import web.javaproject.fooddeliveryapp.dto.OrderIdDTO;
+import web.javaproject.fooddeliveryapp.dto.*;
+import web.javaproject.fooddeliveryapp.model.Client;
+import web.javaproject.fooddeliveryapp.model.Dish;
 import web.javaproject.fooddeliveryapp.model.Order;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class OrderMapper {
@@ -35,5 +39,15 @@ public class OrderMapper {
         return new OrderIdDTO(
             order.getId()
         );
+    }
+
+    public List<OrderDTO> toDTOsList(List<Order> orders) {
+        List<OrderDTO> ordersDTOs = new ArrayList<OrderDTO>();
+
+        for (Order order :  orders) {
+            ordersDTOs.add(toDTO(order));
+        }
+
+        return ordersDTOs;
     }
 }

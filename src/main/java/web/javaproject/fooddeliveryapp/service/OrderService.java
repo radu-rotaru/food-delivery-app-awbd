@@ -3,7 +3,9 @@ package web.javaproject.fooddeliveryapp.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
 import web.javaproject.fooddeliveryapp.dto.CreateOrderDTO;
+import web.javaproject.fooddeliveryapp.dto.UpdateOrderDTO;
 import web.javaproject.fooddeliveryapp.exception.*;
 import web.javaproject.fooddeliveryapp.model.*;
 import web.javaproject.fooddeliveryapp.repository.CourierRepository;
@@ -72,7 +74,7 @@ public class OrderService {
             dishes.add(dish.get());
         }
 
-        Order order = new Order(restaurant.get(), client.get(), courier.get(), dishes);
+        Order order = new Order(restaurant.get(), client.get(), courier.get(), dishes, "processed");
 
         order.getCourier().setAvailable(false);
         courierRepository.save(order.getCourier());
@@ -82,5 +84,43 @@ public class OrderService {
 
     public Optional<Order> getOrder(Long orderId) {
         return orderRepository.findById(orderId);
+    }
+
+    public List<Order> getAllOrders(Long clientId, String status) {
+        Optional<Client> client = clientService.getClient(clientId);
+
+        if(client.isEmpty()) {
+            throw new ClientDoesNotExistException();
+        }
+        else {
+            if(status != null) {
+                return orderRepository.findByClientIdAndStatus(clientId, status);
+            }
+            else {
+                return orderRepository.findByClientId(clientId);
+            }
+        }
+    }
+
+    public Order updateOrder(Long orderId, UpdateOrderDTO updateOrderDTO) {
+        Optional<Order> order = getOrder(orderId);
+
+        if(order.isEmpty()) {
+            throw new OrderDoesNotExistException();
+        }
+        else {
+            Order orderEntity = order.get();
+
+            if(updateOrderDTO.getStatus() != null) {
+                orderEntity.setStatus(updateOrderDTO.getStatus());
+            }
+
+            if(updateOrderDTO.getDishIds() != null) {
+                List<Dish> dishes = dishService.getDishes(updateOrderDTO.getDishIds());
+                orderEntity.setDishes(dishes);
+            }
+
+           return orderEntity;
+        }
     }
 }

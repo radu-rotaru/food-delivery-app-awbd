@@ -11,6 +11,8 @@ import web.javaproject.fooddeliveryapp.model.Dish;
 import web.javaproject.fooddeliveryapp.model.Restaurant;
 import web.javaproject.fooddeliveryapp.repository.DishRepository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -30,6 +32,22 @@ public class DishService {
 
     public Optional<Dish> getDish(Long dishId) {
         return dishRepository.findById(dishId);
+    }
+
+    public List<Dish> getDishes(List<Long> dishIds) {
+        List<Dish> dishes = new ArrayList<>();
+        for (int i = 0; i < dishIds.size(); i++) {
+            Optional<Dish> dish = dishRepository.findById(dishIds.get(i));
+
+            if(dish.isPresent()) {
+                dishes.add(dish.get());
+            }
+            else {
+                throw new DishDoesNotExistException();
+            }
+        }
+
+        return dishes;
     }
 
     public Dish updateDish(Dish dish) {
