@@ -27,16 +27,16 @@ public class OrderController {
         this.orderService = orderService;
         this.orderMapper = orderMapper;
     }
-
-    @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestBody CreateOrderDTO createOrderDTO) {
-        try {
-            Order order = orderService.createOrder(createOrderDTO);
-            OrderDTO orderDTO = orderMapper.toDTO(order);
-
-            return new ResponseEntity<>(orderDTO, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>("Error creating order: " + e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
+//
+//    @PostMapping("/create")
+//    public ResponseEntity<?> create(@RequestBody CreateOrderDTO createOrderDTO) {
+//        try {
+//            Order order = orderService.createOrder(createOrderDTO);
+//            OrderDTO orderDTO = orderMapper.toDTO(order);
+//
+//            return new ResponseEntity<>(orderDTO, HttpStatus.CREATED);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>("Error creating order: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+//        }
+//    }
 }

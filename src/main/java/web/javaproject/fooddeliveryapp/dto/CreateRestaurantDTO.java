@@ -8,9 +8,8 @@ public class CreateRestaurantDTO extends RestaurantDTO {
     }
 
     public CreateRestaurantDTO(String name, String address, String email, String openingHours) {
-        super(name, address);
+        super(name, address, openingHours);
         this.email = email;
-        this.openingHours = openingHours;
     }
 
     public String getEmail() {

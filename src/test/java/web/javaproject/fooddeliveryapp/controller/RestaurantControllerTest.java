@@ -14,7 +14,7 @@ import web.javaproject.fooddeliveryapp.dto.CreateRestaurantDTO;
 import web.javaproject.fooddeliveryapp.dto.GetRestaurantDTO;
 import web.javaproject.fooddeliveryapp.exception.RestaurantAlreadyExistsException;
 import web.javaproject.fooddeliveryapp.exception.RestaurantDoesNotExistException;
-import web.javaproject.fooddeliveryapp.mapper.RestaurantMapper;
+import web.javaproject.fooddeliveryapp.mapper.RestaurantMapper_old;
 import web.javaproject.fooddeliveryapp.model.Restaurant;
 import web.javaproject.fooddeliveryapp.service.RestaurantService;
 
@@ -31,7 +31,7 @@ public class RestaurantControllerTest {
     private RestaurantService restaurantService;
 
     @Mock
-    private RestaurantMapper restaurantMapper;
+    private RestaurantMapper_old restaurantMapper;
 
     @InjectMocks
     private RestaurantController restaurantController;

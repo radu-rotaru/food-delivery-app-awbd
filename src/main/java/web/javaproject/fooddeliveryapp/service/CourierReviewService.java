@@ -30,35 +30,36 @@ public class CourierReviewService {
         this.orderService = orderService;
         this.courierReviewRepository = courierReviewRepository;
     }
-
-    public CourierReview createCourierReview(CreateCourierReviewDTO createCourierReviewDTO) {
-        Optional<Client> client = clientService.getClient(createCourierReviewDTO.getClientId());
-        if (client.isEmpty()) {
-            throw new ClientDoesNotExistException();
-        }
-
-        Optional<Courier> courier = courierService.getCourier(createCourierReviewDTO.getCourierId());
-        if (courier.isEmpty()) {
-            throw new CourierDoesNotExistException();
-        }
-
-        Optional<Order> order = orderService.getOrder(createCourierReviewDTO.getOrderId());
-        if (order.isEmpty()) {
-            throw new OrderDoesNotExistException();
-        }
-
-        Optional<CourierReview> existingCourierReview = courierReviewRepository.findByClientIdAndCourierIdAndOrderId(createCourierReviewDTO.getClientId(), createCourierReviewDTO.getCourierId(), createCourierReviewDTO.getOrderId());
-
-        if (existingCourierReview.isPresent()) {
-            throw new CourierReviewAlreadyExistsException();
-        }
-
-        if (order.get().getClient() != client.get() || order.get().getCourier() != courier.get()) {
-           throw new OrderIsNotValidException();
-        }
-
-        CourierReview courierReview = new CourierReview(createCourierReviewDTO.getStars(), client.get(), courier.get(), order.get());
-
-        return courierReviewRepository.save(courierReview);
-    }
 }
+
+//    public CourierReview createCourierReview(CreateCourierReviewDTO createCourierReviewDTO) {
+//        Optional<Client> client = clientService.getClient(createCourierReviewDTO.getClientId());
+//        if (client.isEmpty()) {
+//            throw new ClientDoesNotExistException();
+//        }
+//
+//        Optional<Courier> courier = courierService.getCourier(createCourierReviewDTO.getCourierId());
+//        if (courier.isEmpty()) {
+//            throw new CourierDoesNotExistException();
+//        }
+
+//        Optional<Order> order = orderService.getOrder(createCourierReviewDTO.getOrderId());
+//        if (order.isEmpty()) {
+//            throw new OrderDoesNotExistException();
+//        }
+
+//        Optional<CourierReview> existingCourierReview = courierReviewRepository.findByClientIdAndCourierIdAndOrderId(createCourierReviewDTO.getClientId(), createCourierReviewDTO.getCourierId(), createCourierReviewDTO.getOrderId());
+//
+//        if (existingCourierReview.isPresent()) {
+//            throw new CourierReviewAlreadyExistsException();
+//        }
+//
+//        if (order.get().getClient() != client.get() || order.get().getCourier() != courier.get()) {
+//           throw new OrderIsNotValidException();
+//        }
+//
+//        CourierReview courierReview = new CourierReview(createCourierReviewDTO.getStars(), client.get(), courier.get(), order.get());
+//
+//        return courierReviewRepository.save(courierReview);
+//    }
+// }
