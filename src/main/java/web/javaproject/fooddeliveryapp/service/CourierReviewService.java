@@ -11,6 +11,7 @@ import web.javaproject.fooddeliveryapp.model.CourierReview;
 import web.javaproject.fooddeliveryapp.model.Order;
 import web.javaproject.fooddeliveryapp.repository.CourierReviewRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -60,5 +61,14 @@ public class CourierReviewService {
         CourierReview courierReview = new CourierReview(createCourierReviewDTO.getStars(), client.get(), courier.get(), order.get());
 
         return courierReviewRepository.save(courierReview);
+    }
+
+    public List<CourierReview> getCourierReviewsByCourierId(Long courierId) {
+        Optional<Courier> courier = courierService.getCourier(courierId);
+        if (courier.isPresent()) {
+            return courierReviewRepository.findByCourierId(courierId);
+        } else {
+            throw new CourierDoesNotExistException();
+        }
     }
 }

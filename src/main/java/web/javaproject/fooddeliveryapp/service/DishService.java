@@ -30,8 +30,14 @@ public class DishService {
         this.dishMapper = dishMapper;
     }
 
-    public Optional<Dish> getDish(Long dishId) {
-        return dishRepository.findById(dishId);
+    public Dish getDish(Long dishId) {
+        Optional<Dish> dish = dishRepository.findById(dishId);
+
+        if(dish.isEmpty()) {
+            throw new DishDoesNotExistException();
+        }
+
+        return dish.get();
     }
 
     public List<Dish> getDishes(List<Long> dishIds) {
@@ -72,5 +78,25 @@ public class DishService {
         Dish dish = dishMapper.createDTOtoEntity(createDishDTO);
 
         return dishRepository.save(dish);
+    }
+
+    public List<Dish> getDishesByRestaurantId(Long restaurantId) {
+        Optional<Restaurant> restaurant = restaurantService.getRestaurant(restaurantId);
+
+        if (restaurant.isEmpty()) {
+            throw new RestaurantDoesNotExistException();
+        }
+
+        return dishRepository.findByRestaurantId(restaurantId);
+    }
+
+    public void deleteDish(Long id) {
+        Optional<Dish> dishOptional = dishRepository.findById(id);
+        if (dishOptional.isPresent()) {
+            Dish dish = dishOptional.get();
+            dishRepository.delete(dish);
+        } else {
+            throw new DishDoesNotExistException();
+        }
     }
 }

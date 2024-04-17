@@ -3,7 +3,6 @@ package web.javaproject.fooddeliveryapp.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
 import web.javaproject.fooddeliveryapp.dto.CreateOrderDTO;
 import web.javaproject.fooddeliveryapp.dto.UpdateOrderDTO;
 import web.javaproject.fooddeliveryapp.exception.*;
@@ -61,17 +60,13 @@ public class OrderService {
 
         List<Dish> dishes = new ArrayList<>();
         for (Long dishesId : createOrderDTO.getDishesIds()) {
-            Optional<Dish> dish = dishService.getDish(dishesId);
+            Dish dish = dishService.getDish(dishesId);
 
-            if (dish.isEmpty()) {
-                throw new DishDoesNotExistException();
-            }
-
-            if (dish.get().getRestaurant().getId() != createOrderDTO.getRestaurantId()) {
+            if (dish.getRestaurant().getId() != createOrderDTO.getRestaurantId()) {
                 throw new DishNotOnMenuException();
             }
 
-            dishes.add(dish.get());
+            dishes.add(dish);
         }
 
         Order order = new Order(restaurant.get(), client.get(), courier.get(), dishes, "processed");
@@ -121,6 +116,17 @@ public class OrderService {
             }
 
            return orderEntity;
+        }
+    }
+
+    public void deleteOrder(Long orderId) {
+        Optional<Order> order = getOrder(orderId);
+
+        if(order.isEmpty()) {
+            throw new OrderDoesNotExistException();
+        }
+        else {
+            orderRepository.delete(order.get());
         }
     }
 }

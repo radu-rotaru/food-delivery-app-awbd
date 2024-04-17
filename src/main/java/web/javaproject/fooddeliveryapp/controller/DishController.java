@@ -14,6 +14,8 @@ import web.javaproject.fooddeliveryapp.model.Dish;
 import web.javaproject.fooddeliveryapp.service.DishService;
 import web.javaproject.fooddeliveryapp.util.ValidationCheck;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/dishes")
 public class DishController {
@@ -26,6 +28,34 @@ public class DishController {
         this.dishMapper = dishMapper;
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getDishById(@PathVariable Long id) {
+        try {
+            Dish dish = dishService.getDish(id);
+            DishDTO dishDTO = dishMapper.toDTO(dish);
+
+            return new ResponseEntity<>(dishDTO, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error retrieving dish: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<?> create(@RequestBody @Valid CreateDishDTO createDishDTO, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            String errorMessage = ValidationCheck.extractValidationErrorMessage(bindingResult);
+            return ResponseEntity.badRequest().body(errorMessage);
+        }
+
+        try {
+            Dish createdDish = dishService.createDish(createDishDTO);
+            DishDTO createdDishDTO = dishMapper.toDTO(createdDish);
+
+            return new ResponseEntity<>(createdDishDTO, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error creating dish: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody @Valid UpdateDishDTO updateDishDTO, BindingResult bindingResult) {
@@ -49,20 +79,25 @@ public class DishController {
         }
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestBody @Valid CreateDishDTO createDishDTO, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            String errorMessage = ValidationCheck.extractValidationErrorMessage(bindingResult);
-            return ResponseEntity.badRequest().body(errorMessage);
-        }
-
+    @GetMapping("/restaurant/{restaurantId}")
+    public ResponseEntity<?> getDishesByRestaurantId(@PathVariable Long restaurantId) {
         try {
-            Dish createdDish = dishService.createDish(createDishDTO);
-            DishDTO createdDishDTO = dishMapper.toDTO(createdDish);
+            List<Dish> dishes = dishService.getDishesByRestaurantId(restaurantId);
+            List<DishDTO> dishDTOs = dishMapper.toDTOsList(dishes);
 
-            return new ResponseEntity<>(createdDishDTO, HttpStatus.CREATED);
+            return new ResponseEntity<>(dishDTOs, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>("Error creating dish: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Error retrieving dishes: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteDish(@PathVariable Long id) {
+        try {
+            dishService.deleteDish(id);
+            return new ResponseEntity<>("Dish deleted successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error deleting dish: " + e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }

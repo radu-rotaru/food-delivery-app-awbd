@@ -77,4 +77,14 @@ public class OrderController {
             return new ResponseEntity<>("Error updating order: " + e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @DeleteMapping("/{orderId}")
+    public ResponseEntity<?> deleteOrder(@PathVariable Long orderId) {
+        try {
+            orderService.deleteOrder(orderId);
+            return new ResponseEntity<>("Order deleted successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error deleting order: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }
