@@ -42,7 +42,7 @@ public class CourierReviewControllerTest {
         BindingResult bindingResult = Mockito.mock(BindingResult.class);
 
         Mockito.when(courierReviewService.createCourierReview(createCourierReviewDTO)).thenReturn(createdCourierReview);
-        Mockito.when(courierReviewMapper.toDTO(createdCourierReview)).thenReturn(courierReviewDTO);
+        Mockito.when(courierReviewMapper.toDto(createdCourierReview)).thenReturn(courierReviewDTO);
 
         ResponseEntity<?> responseEntity = courierReviewController.create(createCourierReviewDTO, bindingResult);
 

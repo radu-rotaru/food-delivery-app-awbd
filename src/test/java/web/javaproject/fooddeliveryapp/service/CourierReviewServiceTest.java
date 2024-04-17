@@ -8,6 +8,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import web.javaproject.fooddeliveryapp.dto.CreateCourierReviewDTO;
 import web.javaproject.fooddeliveryapp.exception.*;
+import web.javaproject.fooddeliveryapp.mapper.CourierReviewMapper;
 import web.javaproject.fooddeliveryapp.model.Client;
 import web.javaproject.fooddeliveryapp.model.Courier;
 import web.javaproject.fooddeliveryapp.model.CourierReview;
@@ -35,6 +36,9 @@ class CourierReviewServiceTest {
     @Mock
     private OrderService orderService;
 
+    @Mock
+    private CourierReviewMapper courierReviewMapper;
+
     @InjectMocks
     private CourierReviewService courierReviewService;
 
@@ -53,6 +57,7 @@ class CourierReviewServiceTest {
         when(order.getCourier()).thenReturn(courier);
 
         CourierReview savedCourierReview = new CourierReview(createCourierReviewDTO.getStars(), client, courier, order);
+        when(courierReviewMapper.toCourierReviewFromCreated(createCourierReviewDTO)).thenReturn(savedCourierReview);
         when(courierReviewRepository.save(any(CourierReview.class))).thenReturn(savedCourierReview);
 
         CourierReview result = courierReviewService.createCourierReview(createCourierReviewDTO);

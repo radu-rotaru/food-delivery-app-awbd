@@ -10,12 +10,15 @@ public class RestaurantDTO {
     @NotBlank(message = "Address cannot be blank")
     private String address;
 
+    private String openingHours;
+
     public RestaurantDTO() {
     }
 
-    public RestaurantDTO(String name, String address) {
+    public RestaurantDTO(String name, String address, String openingHours) {
         this.name = name;
         this.address = address;
+        this.openingHours = openingHours;
     }
 
     public String getName() {
@@ -33,4 +36,8 @@ public class RestaurantDTO {
     public void setAddress(String address) {
         this.address = address;
     }
+
+    public String getOpeningHours() {return openingHours;}
+    public void setOpeningHours(String openingHours) {this.openingHours = openingHours;}
+
 }

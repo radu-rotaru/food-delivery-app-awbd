@@ -99,4 +99,16 @@ public class DishService {
             throw new DishDoesNotExistException();
         }
     }
+//
+//    public Dish createDish(CreateDishDTO createDishDTO) {
+//        Optional<Restaurant> restaurant = restaurantService.getRestaurant(createDishDTO.getRestaurantId());
+//
+//        if (restaurant.isEmpty()) {
+//            throw new RestaurantDoesNotExistException();
+//        }
+//
+//        Dish dish = dishMapper.createDTOtoEntity(createDishDTO);
+//
+//        return dishRepository.save(dish);
+//    }
 }

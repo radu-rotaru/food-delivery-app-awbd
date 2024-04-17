@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import web.javaproject.fooddeliveryapp.dto.CreateCourierReviewDTO;
 import web.javaproject.fooddeliveryapp.exception.*;
+import web.javaproject.fooddeliveryapp.mapper.CourierReviewMapper;
 import web.javaproject.fooddeliveryapp.model.Client;
 import web.javaproject.fooddeliveryapp.model.Courier;
 import web.javaproject.fooddeliveryapp.model.CourierReview;
@@ -18,6 +19,9 @@ import java.util.Optional;
 @Validated
 public class CourierReviewService {
     private final CourierReviewRepository courierReviewRepository;
+
+    private final CourierReviewMapper courierReviewMapper;
+
     private final ClientService clientService;
 
     private final CourierService courierService;
@@ -25,11 +29,12 @@ public class CourierReviewService {
     private final OrderService orderService;
 
     @Autowired
-    public CourierReviewService(CourierReviewRepository courierReviewRepository, ClientService clientService, CourierService courierService, OrderService orderService) {
+    public CourierReviewService(CourierReviewRepository courierReviewRepository, CourierReviewMapper courierReviewMapper, ClientService clientService, CourierService courierService, OrderService orderService) {
         this.clientService = clientService;
         this.courierService = courierService;
         this.orderService = orderService;
         this.courierReviewRepository = courierReviewRepository;
+        this.courierReviewMapper = courierReviewMapper;
     }
 
     public CourierReview createCourierReview(CreateCourierReviewDTO createCourierReviewDTO) {
@@ -58,8 +63,7 @@ public class CourierReviewService {
            throw new OrderIsNotValidException();
         }
 
-        CourierReview courierReview = new CourierReview(createCourierReviewDTO.getStars(), client.get(), courier.get(), order.get());
-
+        CourierReview courierReview = courierReviewMapper.toCourierReviewFromCreated(createCourierReviewDTO);
         return courierReviewRepository.save(courierReview);
     }
 

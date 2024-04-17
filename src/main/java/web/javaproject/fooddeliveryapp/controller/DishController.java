@@ -100,4 +100,21 @@ public class DishController {
             return new ResponseEntity<>("Error deleting dish: " + e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+//    @PostMapping("/create")
+//    public ResponseEntity<?> create(@RequestBody @Valid CreateDishDTO createDishDTO, BindingResult bindingResult) {
+//        if (bindingResult.hasErrors()) {
+//            String errorMessage = ValidationCheck.extractValidationErrorMessage(bindingResult);
+//            return ResponseEntity.badRequest().body(errorMessage);
+//        }
+//
+//        try {
+//            Dish createdDish = dishService.createDish(createDishDTO);
+//            DishDTO createdDishDTO = dishMapper.toDTO(createdDish);
+//
+//            return new ResponseEntity<>(createdDishDTO, HttpStatus.CREATED);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>("Error creating dish: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+//        }
+//    }
 }

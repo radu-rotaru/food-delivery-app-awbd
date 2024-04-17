@@ -50,11 +50,27 @@ public class CourierReviewController {
 
         try {
             CourierReview courierReview = courierReviewService.createCourierReview(createCourierReviewDTO);
-            CourierReviewDTO courierReviewDTO = courierReviewMapper.toDTO(courierReview);
+            CourierReviewDTO courierReviewDTO = courierReviewMapper.toDto(courierReview);
 
             return new ResponseEntity<>(courierReviewDTO, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>("Error creating courier review: " + e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+//    @PostMapping("/create")
+//    public ResponseEntity<?> create(@RequestBody @Valid CreateCourierReviewDTO createCourierReviewDTO, BindingResult bindingResult) {
+//        if (bindingResult.hasErrors()) {
+//            String errorMessage = ValidationCheck.extractValidationErrorMessage(bindingResult);
+//            return ResponseEntity.badRequest().body(errorMessage);
+//        }
+//
+//        try {
+//            CourierReview courierReview = courierReviewService.createCourierReview(createCourierReviewDTO);
+//            CourierReviewDTO courierReviewDTO = courierReviewMapper.toDTO(courierReview);
+//
+//            return new ResponseEntity<>(courierReviewDTO, HttpStatus.CREATED);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>("Error creating courier review: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+//        }
+//    }
 }

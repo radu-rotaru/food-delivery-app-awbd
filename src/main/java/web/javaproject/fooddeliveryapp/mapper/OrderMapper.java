@@ -13,14 +13,14 @@ import java.util.List;
 @Component
 public class OrderMapper {
 
-    private final RestaurantMapper restaurantMapper;
+     private final RestaurantMapper restaurantMapper;
     private final ClientMapper clientMapper;
     private final CourierMapper courierMapper;
     private final DishMapper dishMapper;
 
     @Autowired
     public OrderMapper(RestaurantMapper restaurantMapper, ClientMapper clientMapper, CourierMapper courierMapper, DishMapper dishMapper) {
-        this.restaurantMapper = restaurantMapper;
+         this.restaurantMapper = restaurantMapper;
         this.clientMapper = clientMapper;
         this.courierMapper = courierMapper;
         this.dishMapper = dishMapper;
@@ -28,8 +28,8 @@ public class OrderMapper {
 
     public OrderDTO toDTO(Order order) {
         return new OrderDTO(
-            restaurantMapper.toDTO(order.getRestaurant()),
-            clientMapper.toDTO(order.getClient()),
+            restaurantMapper.toDto(order.getRestaurant()),
+            clientMapper.toDto(order.getClient()),
             courierMapper.toDTO(order.getCourier()),
             dishMapper.toDTOsList(order.getDishes())
         );
