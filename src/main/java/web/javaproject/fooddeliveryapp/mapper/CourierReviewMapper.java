@@ -17,11 +17,11 @@ public class CourierReviewMapper {
         this.courierMapper = courierMapper;
         this.orderMapper = orderMapper;
     }
-    public CourierReviewDTO toDTO(CourierReview courierReview) {
-        return new CourierReviewDTO(
-            clientMapper.toDTO(courierReview.getClient()),
-            courierMapper.toDTO(courierReview.getCourier()),
-            orderMapper.toIdDTO(courierReview.getOrder())
-        );
-    }
+//    public CourierReviewDTO toDTO(CourierReview courierReview) {
+//        return new CourierReviewDTO(
+//            clientMapper.toDTO(courierReview.getClient()),
+//            courierMapper.toDTO(courierReview.getCourier()),
+//            orderMapper.toIdDTO(courierReview.getOrder())
+//        );
+//    }
 }

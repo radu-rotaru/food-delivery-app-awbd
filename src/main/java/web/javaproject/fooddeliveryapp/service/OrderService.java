@@ -27,6 +27,7 @@ public class OrderService {
     private final RestaurantService restaurantService;
 
     private final DishService dishService;
+
     @Autowired
     public OrderService(OrderRepository orderRepository, CourierRepository courierRepository, ClientService clientService, CourierService courierService, RestaurantService restaurantService, DishService dishService) {
         this.orderRepository = orderRepository;
@@ -36,51 +37,52 @@ public class OrderService {
         this.restaurantService = restaurantService;
         this.dishService = dishService;
     }
-
-    public Order createOrder(CreateOrderDTO createOrderDTO) {
-        Optional<Client> client = clientService.getClient(createOrderDTO.getClientId());
-        if (client.isEmpty()) {
-            throw new ClientDoesNotExistException();
-        }
-
-        Optional<Restaurant> restaurant = restaurantService.getRestaurant(createOrderDTO.getRestaurantId());
-        if (restaurant.isEmpty()) {
-            throw new RestaurantDoesNotExistException();
-        }
-
-        Optional<Courier> courier = courierService.getCourier(createOrderDTO.getCourierId());
-        if (courier.isEmpty()) {
-            throw new CourierDoesNotExistException();
-        }
-
-        if (!courier.get().isAvailable()) {
-            throw new CourierNotAvailableException();
-        }
-
-        List<Dish> dishes = new ArrayList<>();
-        for (Long dishesId : createOrderDTO.getDishesIds()) {
-            Optional<Dish> dish = dishService.getDish(dishesId);
-
-            if (dish.isEmpty()) {
-                throw new DishDoesNotExistException();
-            }
-
-            if (dish.get().getRestaurant().getId() != createOrderDTO.getRestaurantId()) {
-                throw new DishNotOnMenuException();
-            }
-
-            dishes.add(dish.get());
-        }
-
-        Order order = new Order(restaurant.get(), client.get(), courier.get(), dishes);
-
-        order.getCourier().setAvailable(false);
-        courierRepository.save(order.getCourier());
-
-        return orderRepository.save(order);
-    }
-
-    public Optional<Order> getOrder(Long orderId) {
-        return orderRepository.findById(orderId);
-    }
 }
+
+//    public Order createOrder(CreateOrderDTO createOrderDTO) {
+//        Optional<Client> client = clientService.getClient(createOrderDTO.getClientId());
+//        if (client.isEmpty()) {
+//            throw new ClientDoesNotExistException();
+//        }
+//
+////        Optional<Restaurant> restaurant = restaurantService.getRestaurant(createOrderDTO.getRestaurantId());
+////        if (restaurant.isEmpty()) {
+////            throw new RestaurantDoesNotExistException();
+////        }
+//
+//        Optional<Courier> courier = courierService.getCourier(createOrderDTO.getCourierId());
+//        if (courier.isEmpty()) {
+//            throw new CourierDoesNotExistException();
+//        }
+//
+//        if (!courier.get().isAvailable()) {
+//            throw new CourierNotAvailableException();
+//        }
+//
+//        List<Dish> dishes = new ArrayList<>();
+//        for (Long dishesId : createOrderDTO.getDishesIds()) {
+//            Optional<Dish> dish = dishService.getDish(dishesId);
+//
+//            if (dish.isEmpty()) {
+//                throw new DishDoesNotExistException();
+//            }
+//
+//            if (dish.get().getRestaurant().getId() != createOrderDTO.getRestaurantId()) {
+//                throw new DishNotOnMenuException();
+//            }
+//
+//            dishes.add(dish.get());
+//        }
+//
+//        Order order = new Order(restaurant.get(), client.get(), courier.get(), dishes);
+//
+//        order.getCourier().setAvailable(false);
+//        courierRepository.save(order.getCourier());
+//
+//        return orderRepository.save(order);
+//    }
+//
+//    public Optional<Order> getOrder(Long orderId) {
+//        return orderRepository.findById(orderId);
+//    }
+//}

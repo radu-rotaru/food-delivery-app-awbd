@@ -43,16 +43,16 @@ public class DishService {
 
         return dishRepository.save(dish);
     }
-
-    public Dish createDish(CreateDishDTO createDishDTO) {
-        Optional<Restaurant> restaurant = restaurantService.getRestaurant(createDishDTO.getRestaurantId());
-
-        if (restaurant.isEmpty()) {
-            throw new RestaurantDoesNotExistException();
-        }
-
-        Dish dish = dishMapper.createDTOtoEntity(createDishDTO);
-
-        return dishRepository.save(dish);
-    }
+//
+//    public Dish createDish(CreateDishDTO createDishDTO) {
+//        Optional<Restaurant> restaurant = restaurantService.getRestaurant(createDishDTO.getRestaurantId());
+//
+//        if (restaurant.isEmpty()) {
+//            throw new RestaurantDoesNotExistException();
+//        }
+//
+//        Dish dish = dishMapper.createDTOtoEntity(createDishDTO);
+//
+//        return dishRepository.save(dish);
+//    }
 }
