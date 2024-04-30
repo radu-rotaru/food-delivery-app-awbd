@@ -4,11 +4,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import web.javaproject.fooddeliveryapp.dto.RestaurantDTO;
+import web.javaproject.fooddeliveryapp.exception.RestaurantAlreadyExistsException;
+import web.javaproject.fooddeliveryapp.exception.RestaurantDoesNotExistException;
 import web.javaproject.fooddeliveryapp.model.Restaurant;
 import web.javaproject.fooddeliveryapp.repository.RestaurantRepository;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,5 +31,29 @@ public class RestaurantServiceImpl implements RestaurantService{
         restaurantRepository.findAll(Sort.by("name")).iterator().forEachRemaining(restaurants::add);
 
         return restaurants.stream().map(restaurant -> modelMapper.map(restaurant, RestaurantDTO.class)).collect(Collectors.toList());
+    }
+
+    public Optional<Restaurant> getRestaurant(Long restaurantId) {
+        return restaurantRepository.findById(restaurantId);
+    }
+
+    public Restaurant getRestaurantByEmail(String email) {
+        Optional<Restaurant> restaurant = restaurantRepository.findByEmail(email);
+
+        if(restaurant.isEmpty()) {
+            throw new RestaurantDoesNotExistException();
+        }
+
+        return restaurant.get();
+    }
+
+    public Restaurant createRestaurant(Restaurant restaurant) {
+        Optional<Restaurant> existingRestaurant = restaurantRepository.findByEmail(restaurant.getEmail());
+
+        if(existingRestaurant.isPresent()) {
+            throw new RestaurantAlreadyExistsException();
+        }
+
+        return restaurantRepository.save(restaurant);
     }
 }

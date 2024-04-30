@@ -14,9 +14,10 @@ import web.javaproject.fooddeliveryapp.dto.CreateRestaurantDTO;
 import web.javaproject.fooddeliveryapp.dto.GetRestaurantDTO;
 import web.javaproject.fooddeliveryapp.exception.RestaurantAlreadyExistsException;
 import web.javaproject.fooddeliveryapp.exception.RestaurantDoesNotExistException;
-import web.javaproject.fooddeliveryapp.mapper.RestaurantMapper_old;
+import web.javaproject.fooddeliveryapp.mapper.RestaurantMapper;
 import web.javaproject.fooddeliveryapp.model.Restaurant;
 import web.javaproject.fooddeliveryapp.service.RestaurantService;
+import web.javaproject.fooddeliveryapp.service.RestaurantServiceImpl;
 
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class RestaurantControllerTest {
     private RestaurantService restaurantService;
 
     @Mock
-    private RestaurantMapper_old restaurantMapper;
+    private RestaurantMapper restaurantMapper;
 
     @InjectMocks
     private RestaurantController restaurantController;
@@ -43,7 +44,7 @@ public class RestaurantControllerTest {
         GetRestaurantDTO expectedRestaurantDTO = new GetRestaurantDTO();
 
         when(restaurantService.getRestaurantByEmail(restaurantEmail)).thenReturn(expectedRestaurant);
-        when(restaurantMapper.toGetDTO(expectedRestaurant)).thenReturn(expectedRestaurantDTO);
+        when(restaurantMapper.toGetDto(expectedRestaurant)).thenReturn(expectedRestaurantDTO);
 
         ResponseEntity<?> responseEntity = restaurantController.getByEmail(restaurantEmail);
 
@@ -75,7 +76,7 @@ public class RestaurantControllerTest {
 
         Mockito.when(restaurantMapper.createDTOtoEntity(createRestaurantDTO)).thenReturn(mappedRestaurant);
         Mockito.when(restaurantService.createRestaurant(mappedRestaurant)).thenReturn(createdRestaurant);
-        Mockito.when(restaurantMapper.toCreateDTO(createdRestaurant)).thenReturn(createdRestaurantDTO);
+        Mockito.when(restaurantMapper.toCreateDto(createdRestaurant)).thenReturn(createdRestaurantDTO);
 
         ResponseEntity<?> responseEntity = restaurantController.create(createRestaurantDTO, bindingResult);
 

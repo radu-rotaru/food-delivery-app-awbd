@@ -4,12 +4,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import web.javaproject.fooddeliveryapp.dto.ClientDTO;
+import web.javaproject.fooddeliveryapp.exception.ClientAlreadyExistsException;
 import web.javaproject.fooddeliveryapp.model.Client;
 import web.javaproject.fooddeliveryapp.repository.ClientRepository;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 public class ClientServiceImpl implements ClientService {
@@ -29,4 +31,17 @@ public class ClientServiceImpl implements ClientService {
         return  clients.stream().map(client -> modelMapper.map(client, ClientDTO.class)).collect(Collectors.toList());
     }
 
+    public Client createClient(Client clientEntity) {
+        Optional<Client> existingClient = clientRepository.findByEmail(clientEntity.getEmail());
+
+        if(existingClient.isPresent()) {
+            throw new ClientAlreadyExistsException();
+        }
+
+        return clientRepository.save(clientEntity);
+    }
+
+    public Optional<Client> getClient(Long clientId) {
+        return clientRepository.findById(clientId);
+    }
 }

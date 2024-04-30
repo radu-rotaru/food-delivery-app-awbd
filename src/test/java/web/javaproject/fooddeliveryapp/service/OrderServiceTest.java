@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import web.javaproject.fooddeliveryapp.dto.CreateOrderDTO;
+import web.javaproject.fooddeliveryapp.dto.UpdateOrderDTO;
 import web.javaproject.fooddeliveryapp.exception.*;
 import web.javaproject.fooddeliveryapp.model.*;
 import web.javaproject.fooddeliveryapp.repository.CourierRepository;
@@ -15,8 +16,7 @@ import web.javaproject.fooddeliveryapp.repository.OrderRepository;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -57,9 +57,9 @@ class OrderServiceTest {
         when(clientService.getClient(createOrderDTO.getClientId())).thenReturn(Optional.of(client));
         when(restaurantService.getRestaurant(createOrderDTO.getRestaurantId())).thenReturn(Optional.of(restaurant));
         when(courierService.getCourier(createOrderDTO.getCourierId())).thenReturn(Optional.of(courier));
-        when(dishService.getDish(1L)).thenReturn(Optional.of(dish1));
-        when(dishService.getDish(2L)).thenReturn(Optional.of(dish2));
-        when(orderRepository.save(any(Order.class))).thenReturn(new Order(restaurant, client, courier, dishes));
+        when(dishService.getDish(1L)).thenReturn(dish1);
+        when(dishService.getDish(2L)).thenReturn(dish2);
+        when(orderRepository.save(any(Order.class))).thenReturn(new Order(restaurant, client, courier, dishes, "processed"));
         when(dish1.getRestaurant()).thenReturn(restaurant);
         when(dish2.getRestaurant()).thenReturn(restaurant);
         when(restaurant.getId()).thenReturn(createOrderDTO.getRestaurantId());
@@ -142,8 +142,8 @@ class OrderServiceTest {
         when(clientService.getClient(createOrderDTO.getClientId())).thenReturn(Optional.of(client));
         when(restaurantService.getRestaurant(createOrderDTO.getRestaurantId())).thenReturn(Optional.of(restaurant));
         when(courierService.getCourier(createOrderDTO.getCourierId())).thenReturn(Optional.of(courier));
-        when(dishService.getDish(createOrderDTO.getDishesIds().get(0))).thenReturn(Optional.empty());
         when(courier.isAvailable()).thenReturn(true);
+        when(dishService.getDish(createOrderDTO.getDishesIds().get(0))).thenThrow(new DishDoesNotExistException());
 
         assertThrows(DishDoesNotExistException.class,
                 () -> orderService.createOrder(createOrderDTO));
@@ -163,12 +163,87 @@ class OrderServiceTest {
         when(clientService.getClient(createOrderDTO.getClientId())).thenReturn(Optional.of(client));
         when(restaurantService.getRestaurant(createOrderDTO.getRestaurantId())).thenReturn(Optional.of(restaurant));
         when(courierService.getCourier(createOrderDTO.getCourierId())).thenReturn(Optional.of(courier));
-        when(dishService.getDish(createOrderDTO.getDishesIds().get(0))).thenReturn(Optional.of(dish));
+        when(dishService.getDish(createOrderDTO.getDishesIds().get(0))).thenReturn(dish);
         when(courier.isAvailable()).thenReturn(true);
         when(dish.getRestaurant()).thenReturn(dishRestaurant);
         when(dishRestaurant.getId()).thenReturn(dishRestaurantId);
 
         assertThrows(DishNotOnMenuException.class,
                 () -> orderService.createOrder(createOrderDTO));
+    }
+
+    @Test
+    public void testUpdateOrder_StatusUpdate() {
+        Long orderId = 1L;
+        UpdateOrderDTO updateOrderDTO = new UpdateOrderDTO();
+        updateOrderDTO.setStatus("delivered");
+        Order order = new Order();
+        when(orderRepository.findById(orderId)).thenReturn(Optional.of(order));
+
+        Order updatedOrder = orderService.updateOrder(orderId, updateOrderDTO);
+
+        assertEquals("delivered", updatedOrder.getStatus());
+    }
+
+    @Test
+    public void testDeleteOrder_Success() {
+        Long orderId = 1L;
+        Order order = new Order();
+        when(orderRepository.findById(orderId)).thenReturn(Optional.of(order));
+
+        orderService.deleteOrder(orderId);
+
+        verify(orderRepository, times(1)).delete(order);
+    }
+
+    @Test
+    public void testDeleteOrder_OrderDoesNotExist() {
+        Long orderId = 1L;
+        when(orderRepository.findById(orderId)).thenReturn(Optional.empty());
+
+        assertThrows(OrderDoesNotExistException.class, () -> orderService.deleteOrder(orderId));
+    }
+
+    @Test
+    public void testGetOrder_Success() {
+        Long orderId = 1L;
+        Order order = new Order();
+        when(orderRepository.findById(orderId)).thenReturn(Optional.of(order));
+
+        Optional<Order> retrievedOrder = orderService.getOrder(orderId);
+
+        assertTrue(retrievedOrder.isPresent());
+        assertEquals(order, retrievedOrder.get());
+    }
+
+    @Test
+    public void testGetOrder_NotFound() {
+        Long orderId = 1L;
+        when(orderRepository.findById(orderId)).thenReturn(Optional.empty());
+
+        Optional<Order> retrievedOrder = orderService.getOrder(orderId);
+
+        assertFalse(retrievedOrder.isPresent());
+    }
+
+    @Test
+    public void testGetAllOrdersForClient_Success() {
+        Long clientId = 1L;
+        String status = "pending";
+        List<Order> orders = new ArrayList<>();
+        when(clientService.getClient(clientId)).thenReturn(Optional.of(new Client()));
+        when(orderRepository.findByClientIdAndStatus(clientId, status)).thenReturn(orders);
+
+        List<Order> retrievedOrders = orderService.getAllOrders(clientId, status);
+
+        assertEquals(orders, retrievedOrders);
+    }
+
+    @Test
+    public void testGetAllOrdersForClient_ClientDoesNotExist() {
+        Long clientId = 1L;
+        when(clientService.getClient(clientId)).thenReturn(Optional.empty());
+
+        assertThrows(ClientDoesNotExistException.class, () -> orderService.getAllOrders(clientId, null));
     }
 }

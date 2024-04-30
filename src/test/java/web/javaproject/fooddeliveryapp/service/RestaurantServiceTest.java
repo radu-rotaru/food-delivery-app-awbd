@@ -22,7 +22,7 @@ public class RestaurantServiceTest {
     private RestaurantRepository restaurantRepository;
 
     @InjectMocks
-    private RestaurantService restaurantService;
+    private RestaurantServiceImpl restaurantService;
 
     @Test
     public void testGetRestaurantById_ExistingRestaurant() {

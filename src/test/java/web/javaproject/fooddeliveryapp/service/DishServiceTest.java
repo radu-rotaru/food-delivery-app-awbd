@@ -41,10 +41,9 @@ public class DishServiceTest {
         Dish expectedDish = new Dish();
         when(dishRepository.findById(dishId)).thenReturn(Optional.of(expectedDish));
 
-        Optional<Dish> result = dishService.getDish(dishId);
+        Dish result = dishService.getDish(dishId);
 
-        assertTrue(result.isPresent());
-        assertEquals(expectedDish, result.get());
+        assertEquals(expectedDish, result);
     }
 
     @Test
@@ -52,9 +51,7 @@ public class DishServiceTest {
         Long dishId = 1L;
         when(dishRepository.findById(dishId)).thenReturn(Optional.empty());
 
-        Optional<Dish> result = dishService.getDish(dishId);
-
-        assertTrue(result.isEmpty());
+        assertThrows(DishDoesNotExistException.class, () -> dishService.getDish(dishId));
     }
 
     @Test

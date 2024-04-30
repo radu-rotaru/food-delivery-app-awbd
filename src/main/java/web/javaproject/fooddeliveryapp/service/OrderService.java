@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import web.javaproject.fooddeliveryapp.dto.CreateOrderDTO;
+import web.javaproject.fooddeliveryapp.dto.UpdateOrderDTO;
 import web.javaproject.fooddeliveryapp.exception.*;
 import web.javaproject.fooddeliveryapp.model.*;
 import web.javaproject.fooddeliveryapp.repository.CourierRepository;
@@ -36,6 +37,98 @@ public class OrderService {
         this.courierService = courierService;
         this.restaurantService = restaurantService;
         this.dishService = dishService;
+    }
+
+    public Order createOrder(CreateOrderDTO createOrderDTO) {
+        Optional<Client> client = clientService.getClient(createOrderDTO.getClientId());
+        if (client.isEmpty()) {
+            throw new ClientDoesNotExistException();
+        }
+
+        Optional<Restaurant> restaurant = restaurantService.getRestaurant(createOrderDTO.getRestaurantId());
+        if (restaurant.isEmpty()) {
+            throw new RestaurantDoesNotExistException();
+        }
+
+        Optional<Courier> courier = courierService.getCourier(createOrderDTO.getCourierId());
+        if (courier.isEmpty()) {
+            throw new CourierDoesNotExistException();
+        }
+
+        if (!courier.get().isAvailable()) {
+            throw new CourierNotAvailableException();
+        }
+
+        List<Dish> dishes = new ArrayList<>();
+        for (Long dishesId : createOrderDTO.getDishesIds()) {
+            Dish dish = dishService.getDish(dishesId);
+
+            if (dish.getRestaurant().getId() != createOrderDTO.getRestaurantId()) {
+                throw new DishNotOnMenuException();
+            }
+
+            dishes.add(dish);
+        }
+
+        Order order = new Order(restaurant.get(), client.get(), courier.get(), dishes, "processed");
+
+        order.getCourier().setAvailable(false);
+        courierRepository.save(order.getCourier());
+
+        return orderRepository.save(order);
+    }
+
+    public Optional<Order> getOrder(Long orderId) {
+        return orderRepository.findById(orderId);
+    }
+
+    public List<Order> getAllOrders(Long clientId, String status) {
+        Optional<Client> client = clientService.getClient(clientId);
+
+        if(client.isEmpty()) {
+            throw new ClientDoesNotExistException();
+        }
+        else {
+            if(status != null) {
+                return orderRepository.findByClientIdAndStatus(clientId, status);
+            }
+            else {
+                return orderRepository.findByClientId(clientId);
+            }
+        }
+    }
+
+    public Order updateOrder(Long orderId, UpdateOrderDTO updateOrderDTO) {
+        Optional<Order> order = getOrder(orderId);
+
+        if(order.isEmpty()) {
+            throw new OrderDoesNotExistException();
+        }
+        else {
+            Order orderEntity = order.get();
+
+            if(updateOrderDTO.getStatus() != null) {
+                orderEntity.setStatus(updateOrderDTO.getStatus());
+            }
+
+            if(updateOrderDTO.getDishIds() != null) {
+                List<Dish> dishes = dishService.getDishes(updateOrderDTO.getDishIds());
+                orderEntity.setDishes(dishes);
+            }
+
+           return orderEntity;
+        }
+    }
+
+    public void deleteOrder(Long orderId) {
+        Optional<Order> order = getOrder(orderId);
+
+        if(order.isEmpty()) {
+            throw new OrderDoesNotExistException();
+        }
+        else {
+            orderRepository.delete(order.get());
+        }
     }
 }
 
