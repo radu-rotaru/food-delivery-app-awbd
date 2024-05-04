@@ -50,7 +50,7 @@ class CourierReviewServiceTest {
         Courier courier = Mockito.mock(Courier.class);
         Order order = Mockito.mock(Order.class);
 
-        when(clientService.getClient(createCourierReviewDTO.getClientId())).thenReturn(Optional.of(client));
+        when(clientService.getClient(createCourierReviewDTO.getClientId())).thenReturn(client);
         when(courierService.getCourier(createCourierReviewDTO.getCourierId())).thenReturn(Optional.of(courier));
         when(orderService.getOrder(createCourierReviewDTO.getOrderId())).thenReturn(order);
         when(order.getClient()).thenReturn(client);
@@ -74,7 +74,7 @@ class CourierReviewServiceTest {
     void createCourierReview_ClientDoesNotExist_ThrowsException() {
         CreateCourierReviewDTO createCourierReviewDTO = new CreateCourierReviewDTO(1L, 1L, 1L, 4);
 
-        when(clientService.getClient(createCourierReviewDTO.getClientId())).thenReturn(Optional.empty());
+        when(clientService.getClient(createCourierReviewDTO.getClientId())).thenThrow(ClientDoesNotExistException.class);
 
         assertThrows(ClientDoesNotExistException.class,
                 () -> courierReviewService.createCourierReview(createCourierReviewDTO));
@@ -88,7 +88,7 @@ class CourierReviewServiceTest {
     void createCourierReview_CourierDoesNotExist_ThrowsException() {
         CreateCourierReviewDTO createCourierReviewDTO = new CreateCourierReviewDTO(1L, 1L, 1L, 4);
 
-        when(clientService.getClient(createCourierReviewDTO.getClientId())).thenReturn(Optional.of(new Client()));
+        when(clientService.getClient(createCourierReviewDTO.getClientId())).thenReturn(new Client());
         when(courierService.getCourier(createCourierReviewDTO.getCourierId())).thenReturn(Optional.empty());
 
         assertThrows(CourierDoesNotExistException.class,
@@ -102,7 +102,7 @@ class CourierReviewServiceTest {
     void createCourierReview_OrderDoesNotExist_ThrowsException() {
         CreateCourierReviewDTO createCourierReviewDTO = new CreateCourierReviewDTO(1L, 1L, 1L, 4);
 
-        when(clientService.getClient(createCourierReviewDTO.getClientId())).thenReturn(Optional.of(new Client()));
+        when(clientService.getClient(createCourierReviewDTO.getClientId())).thenReturn(new Client());
         when(courierService.getCourier(createCourierReviewDTO.getCourierId())).thenReturn(Optional.of(new Courier()));
         when(orderService.getOrder(createCourierReviewDTO.getOrderId())).thenThrow(OrderDoesNotExistException.class);
 
@@ -120,7 +120,7 @@ class CourierReviewServiceTest {
         Courier courier = Mockito.mock(Courier.class);
         Order order = Mockito.mock(Order.class);
 
-        when(clientService.getClient(createCourierReviewDTO.getClientId())).thenReturn(Optional.of(client));
+        when(clientService.getClient(createCourierReviewDTO.getClientId())).thenReturn(client);
         when(courierService.getCourier(createCourierReviewDTO.getCourierId())).thenReturn(Optional.of(courier));
         when(orderService.getOrder(createCourierReviewDTO.getOrderId())).thenReturn(order);
 
@@ -139,7 +139,7 @@ class CourierReviewServiceTest {
         Order order = Mockito.mock(Order.class);
         CourierReview courierReview = new CourierReview();
 
-        when(clientService.getClient(createCourierReviewDTO.getClientId())).thenReturn(Optional.of(client));
+        when(clientService.getClient(createCourierReviewDTO.getClientId())).thenReturn(client);
         when(courierService.getCourier(createCourierReviewDTO.getCourierId())).thenReturn(Optional.of(courier));
         when(orderService.getOrder(createCourierReviewDTO.getOrderId())).thenReturn(order);
         when(client.getId()).thenReturn(1L);

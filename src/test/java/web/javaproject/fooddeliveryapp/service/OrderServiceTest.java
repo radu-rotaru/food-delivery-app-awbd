@@ -54,7 +54,7 @@ class OrderServiceTest {
         Dish dish2 = Mockito.mock(Dish.class);
         List<Dish> dishes = new ArrayList<>(Arrays.asList(dish1, dish2));
 
-        when(clientService.getClient(createOrderDTO.getClientId())).thenReturn(Optional.of(client));
+        when(clientService.getClient(createOrderDTO.getClientId())).thenReturn(client);
         when(restaurantService.getRestaurant(createOrderDTO.getRestaurantId())).thenReturn(Optional.of(restaurant));
         when(courierService.getCourier(createOrderDTO.getCourierId())).thenReturn(Optional.of(courier));
         when(dishService.getDish(1L)).thenReturn(dish1);
@@ -79,7 +79,7 @@ class OrderServiceTest {
     void createOrder_ClientDoesNotExist() {
         CreateOrderDTO createOrderDTO = new CreateOrderDTO(1L, 1L, 1L, new ArrayList<>(Arrays.asList(1L)));
 
-        when(clientService.getClient(createOrderDTO.getClientId())).thenReturn(Optional.empty());
+        when(clientService.getClient(createOrderDTO.getClientId())).thenThrow(ClientDoesNotExistException.class);
 
         assertThrows(ClientDoesNotExistException.class,
                 () -> orderService.createOrder(createOrderDTO));
@@ -91,7 +91,7 @@ class OrderServiceTest {
 
         Client client = Mockito.mock(Client.class);
 
-        when(clientService.getClient(createOrderDTO.getClientId())).thenReturn(Optional.of(client));
+        when(clientService.getClient(createOrderDTO.getClientId())).thenReturn(client);
         when(restaurantService.getRestaurant(createOrderDTO.getRestaurantId())).thenReturn(Optional.empty());
 
         assertThrows(RestaurantDoesNotExistException.class,
@@ -106,7 +106,7 @@ class OrderServiceTest {
         Client client = Mockito.mock(Client.class);
         Restaurant restaurant = Mockito.mock(Restaurant.class);
 
-        when(clientService.getClient(createOrderDTO.getClientId())).thenReturn(Optional.of(client));
+        when(clientService.getClient(createOrderDTO.getClientId())).thenReturn(client);
         when(restaurantService.getRestaurant(createOrderDTO.getRestaurantId())).thenReturn(Optional.of(restaurant));
         when(courierService.getCourier(createOrderDTO.getCourierId())).thenReturn(Optional.empty());
 
@@ -122,7 +122,7 @@ class OrderServiceTest {
         Restaurant restaurant = Mockito.mock(Restaurant.class);
         Courier courier = Mockito.mock(Courier.class);
 
-        when(clientService.getClient(createOrderDTO.getClientId())).thenReturn(Optional.of(client));
+        when(clientService.getClient(createOrderDTO.getClientId())).thenReturn(client);
         when(restaurantService.getRestaurant(createOrderDTO.getRestaurantId())).thenReturn(Optional.of(restaurant));
         when(courierService.getCourier(createOrderDTO.getCourierId())).thenReturn(Optional.of(courier));
         when(courier.isAvailable()).thenReturn(false);
@@ -139,7 +139,7 @@ class OrderServiceTest {
         Restaurant restaurant = Mockito.mock(Restaurant.class);
         Courier courier = Mockito.mock(Courier.class);
 
-        when(clientService.getClient(createOrderDTO.getClientId())).thenReturn(Optional.of(client));
+        when(clientService.getClient(createOrderDTO.getClientId())).thenReturn(client);
         when(restaurantService.getRestaurant(createOrderDTO.getRestaurantId())).thenReturn(Optional.of(restaurant));
         when(courierService.getCourier(createOrderDTO.getCourierId())).thenReturn(Optional.of(courier));
         when(courier.isAvailable()).thenReturn(true);
@@ -160,7 +160,7 @@ class OrderServiceTest {
         Dish dish = Mockito.mock(Dish.class);
         Restaurant dishRestaurant = Mockito.mock(Restaurant.class);
 
-        when(clientService.getClient(createOrderDTO.getClientId())).thenReturn(Optional.of(client));
+        when(clientService.getClient(createOrderDTO.getClientId())).thenReturn(client);
         when(restaurantService.getRestaurant(createOrderDTO.getRestaurantId())).thenReturn(Optional.of(restaurant));
         when(courierService.getCourier(createOrderDTO.getCourierId())).thenReturn(Optional.of(courier));
         when(dishService.getDish(createOrderDTO.getDishesIds().get(0))).thenReturn(dish);
@@ -228,7 +228,7 @@ class OrderServiceTest {
         Long clientId = 1L;
         String status = "pending";
         List<Order> orders = new ArrayList<>();
-        when(clientService.getClient(clientId)).thenReturn(Optional.of(new Client()));
+        when(clientService.getClient(clientId)).thenReturn(new Client());
         when(orderRepository.findByClientIdAndStatus(clientId, status)).thenReturn(orders);
 
         List<Order> retrievedOrders = orderService.getAllOrders(clientId, status);
@@ -239,7 +239,7 @@ class OrderServiceTest {
     @Test
     public void testGetAllOrdersForClient_ClientDoesNotExist() {
         Long clientId = 1L;
-        when(clientService.getClient(clientId)).thenReturn(Optional.empty());
+        when(clientService.getClient(clientId)).thenThrow(ClientDoesNotExistException.class);
 
         assertThrows(ClientDoesNotExistException.class, () -> orderService.getAllOrders(clientId, null));
     }
