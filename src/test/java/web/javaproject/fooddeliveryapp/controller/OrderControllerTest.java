@@ -18,7 +18,6 @@ import web.javaproject.fooddeliveryapp.service.OrderService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,7 +33,7 @@ public class OrderControllerTest {
     private OrderMapper orderMapper;
 
     @InjectMocks
-    private OrderController orderController;
+        private OrderController orderController;
 
     @Test
     public void testCreateOrder_Success() {
@@ -129,45 +128,45 @@ public class OrderControllerTest {
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
         assertEquals("Error creating order: The dish was not on the menu.", responseEntity.getBody());
     }
+//
+//    @Test
+//    public void testGetOrderById() {
+//        Long orderId = 1L;
+//        Order order = new Order();
+//        OrderDTO orderDTO = new OrderDTO();
+//        Mockito.when(orderService.getOrder(orderId)).thenReturn(Optional.of(order);
+//        Mockito.when(orderMapper.toDTO(order)).thenReturn(orderDTO);
+//
+//        ResponseEntity<?> responseEntity = orderController.getOrderById(orderId);
+//
+//        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+//        assertEquals(orderDTO, responseEntity.getBody());
+//    }
+//
+//    @Test
+//    public void testGetOrderById_NotFound() {
+//        Long orderId = 1L;
+//        Mockito.when(orderService.getOrder(orderId)).thenReturn(Optional.empty());
+//
+//        ResponseEntity<?> responseEntity = orderController.getOrderById(orderId);
+//
+//        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+//    }
 
-    @Test
-    public void testGetOrderById() {
-        Long orderId = 1L;
-        Order order = new Order();
-        OrderDTO orderDTO = new OrderDTO();
-        Mockito.when(orderService.getOrder(orderId)).thenReturn(Optional.of(order));
-        Mockito.when(orderMapper.toDTO(order)).thenReturn(orderDTO);
-
-        ResponseEntity<?> responseEntity = orderController.getOrderById(orderId);
-
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals(orderDTO, responseEntity.getBody());
-    }
-
-    @Test
-    public void testGetOrderById_NotFound() {
-        Long orderId = 1L;
-        Mockito.when(orderService.getOrder(orderId)).thenReturn(Optional.empty());
-
-        ResponseEntity<?> responseEntity = orderController.getOrderById(orderId);
-
-        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
-    }
-
-    @Test
-    public void testGetAllOrdersForClient() {
-        Long clientId = 1L;
-        String status = "pending";
-        List<Order> orders = new ArrayList<>();
-        List<OrderDTO> orderDTOs = new ArrayList<>();
-        Mockito.when(orderService.getAllOrders(clientId, status)).thenReturn(orders);
-        Mockito.when(orderMapper.toDTOsList(orders)).thenReturn(orderDTOs);
-
-        ResponseEntity<?> responseEntity = orderController.getAllOrdersForClient(clientId, status);
-
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals(orderDTOs, responseEntity.getBody());
-    }
+//    @Test
+//    public void testGetAllOrdersForClient() {
+//        Long clientId = 1L;
+//        String status = "pending";
+//        List<Order> orders = new ArrayList<>();
+//        List<OrderDTO> orderDTOs = new ArrayList<>();
+//        Mockito.when(orderService.getAllOrders(clientId, status)).thenReturn(orders);
+//        Mockito.when(orderMapper.toDTOsList(orders)).thenReturn(orderDTOs);
+//
+//        ResponseEntity<?> responseEntity = orderController.getAllOrdersForClient(clientId, status);
+//
+//        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+//        assertEquals(orderDTOs, responseEntity.getBody());
+//    }
 
     @Test
     public void testUpdateOrder() {

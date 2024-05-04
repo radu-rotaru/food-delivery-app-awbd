@@ -40,10 +40,7 @@ public class OrderService {
     }
 
     public Order createOrder(CreateOrderDTO createOrderDTO) {
-        Optional<Client> client = clientService.getClient(createOrderDTO.getClientId());
-        if (client.isEmpty()) {
-            throw new ClientDoesNotExistException();
-        }
+        Client client = clientService.getClient(createOrderDTO.getClientId());
 
         Optional<Restaurant> restaurant = restaurantService.getRestaurant(createOrderDTO.getRestaurantId());
         if (restaurant.isEmpty()) {
@@ -70,7 +67,7 @@ public class OrderService {
             dishes.add(dish);
         }
 
-        Order order = new Order(restaurant.get(), client.get(), courier.get(), dishes, "processed");
+        Order order = new Order(restaurant.get(), client, courier.get(), dishes, "processed");
 
         order.getCourier().setAvailable(false);
         courierRepository.save(order.getCourier());
@@ -78,57 +75,46 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
-    public Optional<Order> getOrder(Long orderId) {
-        return orderRepository.findById(orderId);
+    public Order getOrder(Long orderId) {
+        Optional<Order> order = orderRepository.findById(orderId);
+
+        if(order.isEmpty()) {
+            throw new OrderDoesNotExistException();
+        }
+
+        return order.get();
     }
 
     public List<Order> getAllOrders(Long clientId, String status) {
-        Optional<Client> client = clientService.getClient(clientId);
+        Client client = clientService.getClient(clientId);
 
-        if(client.isEmpty()) {
-            throw new ClientDoesNotExistException();
+        if(status != null) {
+            return orderRepository.findByClientIdAndStatus(clientId, status);
         }
         else {
-            if(status != null) {
-                return orderRepository.findByClientIdAndStatus(clientId, status);
-            }
-            else {
-                return orderRepository.findByClientId(clientId);
-            }
+            return orderRepository.findByClientId(clientId);
         }
     }
 
     public Order updateOrder(Long orderId, UpdateOrderDTO updateOrderDTO) {
-        Optional<Order> order = getOrder(orderId);
+        Order order = getOrder(orderId);
 
-        if(order.isEmpty()) {
-            throw new OrderDoesNotExistException();
+        if(updateOrderDTO.getStatus() != null) {
+            order.setStatus(updateOrderDTO.getStatus());
         }
-        else {
-            Order orderEntity = order.get();
 
-            if(updateOrderDTO.getStatus() != null) {
-                orderEntity.setStatus(updateOrderDTO.getStatus());
-            }
-
-            if(updateOrderDTO.getDishIds() != null) {
-                List<Dish> dishes = dishService.getDishes(updateOrderDTO.getDishIds());
-                orderEntity.setDishes(dishes);
-            }
-
-           return orderEntity;
+        if(updateOrderDTO.getDishIds() != null) {
+            List<Dish> dishes = dishService.getDishes(updateOrderDTO.getDishIds());
+            order.setDishes(dishes);
         }
+
+       return order;
     }
 
     public void deleteOrder(Long orderId) {
-        Optional<Order> order = getOrder(orderId);
+        Order order = getOrder(orderId);
 
-        if(order.isEmpty()) {
-            throw new OrderDoesNotExistException();
-        }
-        else {
-            orderRepository.delete(order.get());
-        }
+        orderRepository.delete(order);
     }
 }
 

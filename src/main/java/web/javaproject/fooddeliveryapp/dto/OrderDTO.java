@@ -3,53 +3,64 @@ package web.javaproject.fooddeliveryapp.dto;
 import java.util.List;
 
 public class OrderDTO {
-    private RestaurantDTO restaurantDTO;
+    private RestaurantDTO restaurant;
 
-    private ClientDTO clientDTO;
+    private ClientDTO client;
 
-    private CourierDTO courierDTO;
+    private CourierDTO courier;
 
-    private List<DishDTO> dishDTO;
+    private List<DishDTO> dishes;
+
+    private String status;
 
     public OrderDTO() {
     }
 
-    public OrderDTO(RestaurantDTO restaurantDTO, ClientDTO clientDTO, CourierDTO courierDTO, List<DishDTO> dishDTO) {
-        this.restaurantDTO = restaurantDTO;
-        this.clientDTO = clientDTO;
-        this.courierDTO = courierDTO;
-        this.dishDTO = dishDTO;
+    public OrderDTO(RestaurantDTO restaurant, ClientDTO client, CourierDTO courier, List<DishDTO> dishes, String status) {
+        this.restaurant = restaurant;
+        this.client = client;
+        this.courier = courier;
+        this.dishes = dishes;
+        this.status = status;
     }
 
-    public RestaurantDTO getRestaurantDTO() {
-        return restaurantDTO;
+    public RestaurantDTO getRestaurant() {
+        return restaurant;
     }
 
-    public void setRestaurantDTO(RestaurantDTO restaurantDTO) {
-        this.restaurantDTO = restaurantDTO;
+    public void setRestaurant(RestaurantDTO restaurant) {
+        this.restaurant = restaurant;
     }
 
-    public ClientDTO getClientDTO() {
-        return clientDTO;
+    public ClientDTO getClient() {
+        return client;
     }
 
-    public void setClientDTO(ClientDTO clientDTO) {
-        this.clientDTO = clientDTO;
+    public void setClient(ClientDTO client) {
+        this.client = client;
     }
 
-    public CourierDTO getCourierDTO() {
-        return courierDTO;
+    public CourierDTO getCourier() {
+        return courier;
     }
 
-    public void setCourierDTO(CourierDTO courierDTO) {
-        this.courierDTO = courierDTO;
+    public void setCourier(CourierDTO courier) {
+        this.courier = courier;
     }
 
-    public List<DishDTO> getDishDTO() {
-        return dishDTO;
+    public List<DishDTO> getDishes() {
+        return dishes;
     }
 
-    public void setDishDTO(List<DishDTO> dishDTO) {
-        this.dishDTO = dishDTO;
+    public void setDishes(List<DishDTO> dishes) {
+        this.dishes = dishes;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

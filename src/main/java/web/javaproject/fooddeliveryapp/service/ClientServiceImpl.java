@@ -5,6 +5,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import web.javaproject.fooddeliveryapp.dto.ClientDTO;
 import web.javaproject.fooddeliveryapp.exception.ClientAlreadyExistsException;
+import web.javaproject.fooddeliveryapp.exception.ClientDoesNotExistException;
+import web.javaproject.fooddeliveryapp.exception.CourierDoesNotExistException;
 import web.javaproject.fooddeliveryapp.model.Client;
 import web.javaproject.fooddeliveryapp.repository.ClientRepository;
 
@@ -41,7 +43,13 @@ public class ClientServiceImpl implements ClientService {
         return clientRepository.save(clientEntity);
     }
 
-    public Optional<Client> getClient(Long clientId) {
-        return clientRepository.findById(clientId);
+    public Client getClient(Long clientId) {
+        Optional<Client> client = clientRepository.findById(clientId);
+
+        if(client.isEmpty()) {
+            throw new ClientDoesNotExistException();
+        }
+
+        return client.get();
     }
 }

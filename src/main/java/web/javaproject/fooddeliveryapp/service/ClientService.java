@@ -9,5 +9,5 @@ import java.util.Optional;
 public interface ClientService {
     List<ClientDTO> findAll();
     public Client createClient(Client clientEntity);
-    public Optional<Client> getClient(Long clientId);
+    public Client getClient(Long clientId);
 }
