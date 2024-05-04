@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Food Delivery</title>
+
+    <script src="/webjars/jquery/3.6.0/jquery.min.js"></script>
+    <script src="/webjars/bootstrap/5.3.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/webjars/bootstrap/5.3.2/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/webjars/font-awesome/6.4.0/css/all.min.css"/>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="nav-link" th:href="@{'/'}"> <i class="fas fa-home mx-1"></i>  </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto topnav">
+                    <li class="nav-item">
+                        <a class="nav-link active" th:href="@{'/restaurant'}">Restaurants</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{'/client'}">Clients</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn-primary" th:href="@{'/product/form'}">
+                            <i class="fas fa-plus-circle"></i> Sell
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto topnav">
+                    <li class="nav-item">
+                        <a class="nav-link btn-primary" th:href="@{'/login'}">
+                            <i class="fas fa-sign-in-alt"></i> Sign In
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn-primary" th:href="@{'/participant/form'}">
+                            <i class="fas fa-user-plus"></i> Register
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <form id="logout-form" th:action="@{/logout}" method="post">
+                            <button type="submit" class="nav-link btn-primary">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+
+    <h2> Order #<span th:text="${orderId}"></span> </h2>
+    <ul>
+        <li> Restaurant: <span th:text="${order.restaurant.name}"></span> </li>
+        <li> Client: <span th:text="${order.client.name}"></span></li>
+        <li> Courier: <span th:text="${order.courier.name}"></span></li>
+    </ul>
+
+    <h4> Dishes </h4>
+    <ul>
+        <li th:each="dish : ${order.dishes}">
+            <span th:text="${dish.name}"></span>, <span th:text="${dish.quantity}"></span>g, <span th:text="${dish.price}"></span> EUR
+        </li>
+    </ul>
+</body>
+</html>

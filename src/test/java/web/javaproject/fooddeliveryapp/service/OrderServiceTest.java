@@ -210,10 +210,9 @@ class OrderServiceTest {
         Order order = new Order();
         when(orderRepository.findById(orderId)).thenReturn(Optional.of(order));
 
-        Optional<Order> retrievedOrder = orderService.getOrder(orderId);
+        Order retrievedOrder = orderService.getOrder(orderId);
 
-        assertTrue(retrievedOrder.isPresent());
-        assertEquals(order, retrievedOrder.get());
+        assertEquals(order, retrievedOrder);
     }
 
     @Test
@@ -221,9 +220,7 @@ class OrderServiceTest {
         Long orderId = 1L;
         when(orderRepository.findById(orderId)).thenReturn(Optional.empty());
 
-        Optional<Order> retrievedOrder = orderService.getOrder(orderId);
-
-        assertFalse(retrievedOrder.isPresent());
+        assertThrows(OrderDoesNotExistException.class, () -> orderService.getOrder(orderId));
     }
 
     @Test

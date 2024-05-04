@@ -52,7 +52,7 @@ class CourierReviewServiceTest {
 
         when(clientService.getClient(createCourierReviewDTO.getClientId())).thenReturn(Optional.of(client));
         when(courierService.getCourier(createCourierReviewDTO.getCourierId())).thenReturn(Optional.of(courier));
-        when(orderService.getOrder(createCourierReviewDTO.getOrderId())).thenReturn(Optional.of(order));
+        when(orderService.getOrder(createCourierReviewDTO.getOrderId())).thenReturn(order);
         when(order.getClient()).thenReturn(client);
         when(order.getCourier()).thenReturn(courier);
 
@@ -104,7 +104,7 @@ class CourierReviewServiceTest {
 
         when(clientService.getClient(createCourierReviewDTO.getClientId())).thenReturn(Optional.of(new Client()));
         when(courierService.getCourier(createCourierReviewDTO.getCourierId())).thenReturn(Optional.of(new Courier()));
-        when(orderService.getOrder(createCourierReviewDTO.getOrderId())).thenReturn(Optional.empty());
+        when(orderService.getOrder(createCourierReviewDTO.getOrderId())).thenThrow(OrderDoesNotExistException.class);
 
         assertThrows(OrderDoesNotExistException.class,
                 () -> courierReviewService.createCourierReview(createCourierReviewDTO));
@@ -122,7 +122,7 @@ class CourierReviewServiceTest {
 
         when(clientService.getClient(createCourierReviewDTO.getClientId())).thenReturn(Optional.of(client));
         when(courierService.getCourier(createCourierReviewDTO.getCourierId())).thenReturn(Optional.of(courier));
-        when(orderService.getOrder(createCourierReviewDTO.getOrderId())).thenReturn(Optional.of(order));
+        when(orderService.getOrder(createCourierReviewDTO.getOrderId())).thenReturn(order);
 
         assertThrows(OrderIsNotValidException.class,
                 () -> courierReviewService.createCourierReview(createCourierReviewDTO));
@@ -141,7 +141,7 @@ class CourierReviewServiceTest {
 
         when(clientService.getClient(createCourierReviewDTO.getClientId())).thenReturn(Optional.of(client));
         when(courierService.getCourier(createCourierReviewDTO.getCourierId())).thenReturn(Optional.of(courier));
-        when(orderService.getOrder(createCourierReviewDTO.getOrderId())).thenReturn(Optional.of(order));
+        when(orderService.getOrder(createCourierReviewDTO.getOrderId())).thenReturn(order);
         when(client.getId()).thenReturn(1L);
         when(courier.getId()).thenReturn(1L);
         when(order.getId()).thenReturn(1L);

@@ -38,20 +38,14 @@ public class CourierReviewService {
     }
 
     public CourierReview createCourierReview(CreateCourierReviewDTO createCourierReviewDTO) {
-        Optional<Client> client = clientService.getClient(createCourierReviewDTO.getClientId());
-        if (client.isEmpty()) {
-            throw new ClientDoesNotExistException();
-        }
+        Client client = clientService.getClient(createCourierReviewDTO.getClientId());
 
         Optional<Courier> courier = courierService.getCourier(createCourierReviewDTO.getCourierId());
         if (courier.isEmpty()) {
             throw new CourierDoesNotExistException();
         }
 
-        Optional<Order> order = orderService.getOrder(createCourierReviewDTO.getOrderId());
-        if (order.isEmpty()) {
-            throw new OrderDoesNotExistException();
-        }
+        Order order = orderService.getOrder(createCourierReviewDTO.getOrderId());
 
         Optional<CourierReview> existingCourierReview = courierReviewRepository.findByClientIdAndCourierIdAndOrderId(createCourierReviewDTO.getClientId(), createCourierReviewDTO.getCourierId(), createCourierReviewDTO.getOrderId());
 
@@ -59,7 +53,7 @@ public class CourierReviewService {
             throw new CourierReviewAlreadyExistsException();
         }
 
-        if (order.get().getClient() != client.get() || order.get().getCourier() != courier.get()) {
+        if (order.getClient() != client || order.getCourier() != courier.get()) {
            throw new OrderIsNotValidException();
         }
 

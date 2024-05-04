@@ -1,32 +1,36 @@
 package web.javaproject.fooddeliveryapp.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import web.javaproject.fooddeliveryapp.dto.CreateOrderDTO;
 import web.javaproject.fooddeliveryapp.dto.OrderDTO;
 import web.javaproject.fooddeliveryapp.dto.UpdateOrderDTO;
 import web.javaproject.fooddeliveryapp.mapper.OrderMapper;
+import web.javaproject.fooddeliveryapp.model.Client;
 import web.javaproject.fooddeliveryapp.model.Order;
+import web.javaproject.fooddeliveryapp.service.ClientService;
 import web.javaproject.fooddeliveryapp.service.OrderService;
 
 import java.util.List;
-import java.util.Optional;
 
-@RestController
-@RequestMapping("/api/orders")
+@Controller
+@RequestMapping("/order")
 public class OrderController {
+
 
     private final OrderService orderService;
 
     private final OrderMapper orderMapper;
 
+    private final ClientService clientService;
 
-    @Autowired
-    public OrderController(OrderService orderService, OrderMapper orderMapper) {
+    public OrderController(OrderService orderService, OrderMapper orderMapper, ClientService clientService) {
         this.orderService = orderService;
         this.orderMapper = orderMapper;
+        this.clientService = clientService;
     }
 
     @PostMapping("/create")
@@ -42,28 +46,37 @@ public class OrderController {
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<?> getOrderById(@PathVariable Long orderId) {
-        Optional<Order> order = orderService.getOrder(orderId);
+    public String getOrderById(@PathVariable Long orderId, Model model) {
+        try {
+            Order order = orderService.getOrder(orderId);
+            OrderDTO orderDTO = orderMapper.toDTO(order);
 
-        if(order.isPresent()) {
-            OrderDTO orderDTO = orderMapper.toDTO(order.get());
-            return new ResponseEntity<>(orderDTO, HttpStatus.OK);
+            model.addAttribute("order", orderDTO);
+            model.addAttribute("orderId", order.getId());
+
+            return "orderView";
         }
-        else {
-            return new ResponseEntity<>(String.format("Order with id %s not found", orderId), HttpStatus.NOT_FOUND);
+        catch (Exception e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "errorView";
         }
     }
 
     @GetMapping("/all")
-    public ResponseEntity<?> getAllOrdersForClient(@RequestParam(required = true) Long clientId, @RequestParam(required = false) String status) {
+    public String getAllOrdersForClient(@RequestParam(required = true) Long clientId, @RequestParam(required = false) String status, Model model) {
         try {
+            Client client = clientService.getClient(clientId);
             List<Order> orders = orderService.getAllOrders(clientId, status);
             List<OrderDTO> orderDTOs = orderMapper.toDTOsList(orders);
 
-            return new ResponseEntity<>(orderDTOs, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>("Error retrieving orders: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+            model.addAttribute("orders", orderDTOs);
+            model.addAttribute("client", client);
+
+            return "clientOrdersList";
+         } catch (Exception e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "errorView";
+         }
     }
 
     @PutMapping("/{orderId}")
@@ -87,6 +100,7 @@ public class OrderController {
             return new ResponseEntity<>("Error deleting order: " + e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+}
 //
 //    @PostMapping("/create")
 //    public ResponseEntity<?> create(@RequestBody CreateOrderDTO createOrderDTO) {
@@ -99,4 +113,3 @@ public class OrderController {
 //            return new ResponseEntity<>("Error creating order: " + e.getMessage(), HttpStatus.BAD_REQUEST);
 //        }
 //    }
-}
