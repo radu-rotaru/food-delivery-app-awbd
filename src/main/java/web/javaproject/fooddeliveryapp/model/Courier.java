@@ -1,15 +1,17 @@
 package web.javaproject.fooddeliveryapp.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
+
 import java.util.List;
 
+@Data
 @Entity
 @Table(name = "couriers")
 public class Courier {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
     private String phoneNumber;
     private boolean available;
@@ -27,54 +29,5 @@ public class Courier {
         this.name = name;
         this.available = available;
         this.phoneNumber = phoneNumber;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public boolean isAvailable() {
-        return available;
-    }
-
-    public void setAvailable(boolean available) {
-        this.available = available;
-    }
-
-    public List<Order> getOrders() {
-        return orders;
-    }
-
-    public void setOrder(List<Order> order) {
-        this.orders = order;
-    }
-
-    public List<CourierReview> getCourierReviews() {
-        return courierReviews;
-    }
-
-    public void setCourierReviews(List<CourierReview> courierReviews) {
-        this.courierReviews = courierReviews;
     }
 }

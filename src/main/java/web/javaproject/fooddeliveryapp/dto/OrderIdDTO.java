@@ -1,5 +1,8 @@
 package web.javaproject.fooddeliveryapp.dto;
 
+import lombok.Data;
+
+@Data
 public class OrderIdDTO {
     private Long id;
 
@@ -8,13 +11,5 @@ public class OrderIdDTO {
 
     public OrderIdDTO(Long orderId) {
         this.id = orderId;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 }
