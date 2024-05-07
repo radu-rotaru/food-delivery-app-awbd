@@ -1,24 +1,19 @@
 package web.javaproject.fooddeliveryapp.dto;
 
+import lombok.Data;
+
 import java.util.List;
 
+@Data
 public class UpdateOrderDTO {
     private String status;
     private List<Long> dishIds;
 
-    public String getStatus() {
-        return status;
+    public UpdateOrderDTO() {
     }
 
-    public void setStatus(String status) {
+    public UpdateOrderDTO(String status, List<Long> dishIds) {
         this.status = status;
-    }
-
-    public List<Long> getDishIds() {
-        return dishIds;
-    }
-
-    public void setDishIds(List<Long> dishIds) {
         this.dishIds = dishIds;
     }
 }

@@ -2,7 +2,9 @@ package web.javaproject.fooddeliveryapp.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import lombok.Data;
 
+@Data
 public class CourierDTO {
     @NotBlank(message = "Name cannot be blank")
     private String name;
@@ -14,22 +16,6 @@ public class CourierDTO {
 
     public CourierDTO(String name, String phoneNumber) {
         this.name = name;
-        this.phoneNumber = phoneNumber;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 }

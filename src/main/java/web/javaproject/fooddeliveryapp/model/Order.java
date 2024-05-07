@@ -1,10 +1,12 @@
 package web.javaproject.fooddeliveryapp.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.util.List;
 
+@Data
 @Entity
 @Table(name = "orders")
 public class Order {
@@ -47,48 +49,4 @@ public class Order {
         this.dishes = dishes;
         this.status = status;
     }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Restaurant getRestaurant() {
-        return restaurant;
-    }
-
-    public void setRestaurant(Restaurant restaurant) {
-        this.restaurant = restaurant;
-    }
-
-    public Client getClient() {
-        return client;
-    }
-
-    public void setClient(Client client) {
-        this.client = client;
-    }
-
-    public Courier getCourier() {
-        return courier;
-    }
-
-    public void setCourier(Courier courier) {
-        this.courier = courier;
-    }
-
-    public List<Dish> getDishes() {
-        return dishes;
-    }
-
-    public void setDishes(List<Dish> dishes) {
-        this.dishes = dishes;
-    }
-
-    public String getStatus() { return status; }
-
-    public void setStatus(String status) { this.status = status; }
 }

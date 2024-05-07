@@ -1,5 +1,8 @@
 package web.javaproject.fooddeliveryapp.dto;
 
+import lombok.Data;
+
+@Data
 public class CreateRestaurantDTO extends RestaurantDTO {
     private String email;
     private String openingHours;
@@ -11,21 +14,4 @@ public class CreateRestaurantDTO extends RestaurantDTO {
         super(name, address, openingHours);
         this.email = email;
     }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getOpeningHours() {
-        return openingHours;
-    }
-
-    public void setOpeningHours(String openingHours) {
-        this.openingHours = openingHours;
-    }
-
 }

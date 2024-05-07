@@ -2,7 +2,9 @@ package web.javaproject.fooddeliveryapp.dto;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import lombok.Data;
 
+@Data
 public class CreateCourierReviewDTO {
     private Long clientId;
     private Long courierId;
@@ -19,38 +21,6 @@ public class CreateCourierReviewDTO {
         this.clientId = clientId;
         this.courierId = courierId;
         this.orderId = orderId;
-        this.stars = stars;
-    }
-
-    public Long getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(Long clientId) {
-        this.clientId = clientId;
-    }
-
-    public Long getCourierId() {
-        return courierId;
-    }
-
-    public void setCourierId(Long courierId) {
-        this.courierId = courierId;
-    }
-
-    public Long getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
-    }
-
-    public int getStars() {
-        return stars;
-    }
-
-    public void setStars(int stars) {
         this.stars = stars;
     }
 }
