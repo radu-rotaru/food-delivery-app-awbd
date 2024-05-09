@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface RestaurantService {
     List<RestaurantDTO> findAll();
-    public Optional<Restaurant> getRestaurant(Long restaurantId);
+    public Restaurant getRestaurant(Long restaurantId);
     public Restaurant getRestaurantByEmail(String email);
     public Restaurant createRestaurant(Restaurant restaurant);
 }

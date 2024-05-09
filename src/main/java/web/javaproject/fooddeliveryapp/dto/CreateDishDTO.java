@@ -1,8 +1,5 @@
 package web.javaproject.fooddeliveryapp.dto;
 
-import lombok.Data;
-
-@Data
 public class CreateDishDTO extends DishDTO {
     private Long restaurantId;
 
@@ -11,5 +8,13 @@ public class CreateDishDTO extends DishDTO {
 
     public CreateDishDTO(String name, int quantity, float price, Long restaurantId) {
         super(name, quantity, price);
+    }
+
+    public Long getRestaurantId() {
+        return restaurantId;
+    }
+
+    public void setRestaurantId(Long restaurantId) {
+        this.restaurantId = restaurantId;
     }
 }

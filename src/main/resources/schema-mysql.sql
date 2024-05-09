@@ -1,9 +1,10 @@
-DROP TABLE IF EXISTS restaurants;
-DROP TABLE IF EXISTS orders;
+DROP TABLE IF EXISTS order_dish;
 DROP TABLE IF EXISTS dishes;
+DROP TABLE IF EXISTS courier_reviews;
+DROP TABLE IF EXISTS orders;
+DROP TABLE IF EXISTS restaurants;
 DROP TABLE IF EXISTS clients;
 DROP TABLE IF EXISTS couriers;
-DROP TABLE IF EXISTS courier_reviews;
 DROP TABLE IF EXISTS USER_AUTHORITY;
 DROP TABLE IF EXISTS USERS;
 DROP TABLE IF EXISTS AUTHORITY;
@@ -13,21 +14,21 @@ CREATE TABLE restaurants (
      name VARCHAR(50),
      address VARCHAR(50),
      email VARCHAR(50),
-     openingHours VARCHAR(50)
+     opening_hours VARCHAR(50)
 );
 
 CREATE TABLE clients (
      id BIGINT AUTO_INCREMENT PRIMARY KEY,
      name VARCHAR(50),
      address VARCHAR(50),
-     email VARCHAR(50),
+     email VARCHAR(50)
 );
 
 CREATE TABLE couriers (
      id BIGINT AUTO_INCREMENT PRIMARY KEY,
      name VARCHAR(50),
-     phoneNumber VARCHAR(50),
-     available BOOLEAN,
+     phone_number VARCHAR(50),
+     available BOOLEAN
 );
 
 CREATE TABLE courier_reviews (
@@ -55,7 +56,7 @@ CREATE TABLE orders (
 
 CREATE TABLE order_dish (
     order_id BIGINT,
-    dish_id BIGINT,
+    dish_id BIGINT
 );
 
 CREATE TABLE USERS (
@@ -80,4 +81,3 @@ CREATE TABLE USER_AUTHORITY (
     FOREIGN KEY (authority_id) REFERENCES AUTHORITY(id),
     PRIMARY KEY (user_id, authority_id)
 );
-

@@ -69,11 +69,7 @@ public class DishService {
     }
 
     public Dish createDish(CreateDishDTO createDishDTO) {
-        Optional<Restaurant> restaurant = restaurantService.getRestaurant(createDishDTO.getRestaurantId());
-
-        if (restaurant.isEmpty()) {
-            throw new RestaurantDoesNotExistException();
-        }
+        Restaurant restaurant = restaurantService.getRestaurant(createDishDTO.getRestaurantId());
 
         Dish dish = dishMapper.createDTOtoEntity(createDishDTO);
 
@@ -81,11 +77,7 @@ public class DishService {
     }
 
     public List<Dish> getDishesByRestaurantId(Long restaurantId) {
-        Optional<Restaurant> restaurant = restaurantService.getRestaurant(restaurantId);
-
-        if (restaurant.isEmpty()) {
-            throw new RestaurantDoesNotExistException();
-        }
+        Restaurant restaurant = restaurantService.getRestaurant(restaurantId);
 
         return dishRepository.findByRestaurantId(restaurantId);
     }

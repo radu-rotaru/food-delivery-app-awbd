@@ -16,5 +16,4 @@ public class FoodDeliveryAppApplication {
 	public ModelMapper modelMapper() {
 		return new ModelMapper();
 	}
-
 }
