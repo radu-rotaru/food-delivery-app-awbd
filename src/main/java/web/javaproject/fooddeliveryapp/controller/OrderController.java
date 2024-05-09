@@ -69,6 +69,9 @@ public class OrderController {
             List<Order> orders = orderService.getAllOrders(clientId, status);
             List<OrderDTO> orderDTOs = orderMapper.toDTOsList(orders);
 
+            System.out.println(orders.get(0).getRestaurant().getName());
+            System.out.println(orderDTOs.get(0).getRestaurant().getName());
+
             model.addAttribute("orders", orderDTOs);
             model.addAttribute("client", client);
 

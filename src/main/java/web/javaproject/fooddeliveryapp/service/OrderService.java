@@ -42,10 +42,7 @@ public class OrderService {
     public Order createOrder(CreateOrderDTO createOrderDTO) {
         Client client = clientService.getClient(createOrderDTO.getClientId());
 
-        Optional<Restaurant> restaurant = restaurantService.getRestaurant(createOrderDTO.getRestaurantId());
-        if (restaurant.isEmpty()) {
-            throw new RestaurantDoesNotExistException();
-        }
+        Restaurant restaurant = restaurantService.getRestaurant(createOrderDTO.getRestaurantId());
 
         Optional<Courier> courier = courierService.getCourier(createOrderDTO.getCourierId());
         if (courier.isEmpty()) {
@@ -67,7 +64,7 @@ public class OrderService {
             dishes.add(dish);
         }
 
-        Order order = new Order(restaurant.get(), client, courier.get(), dishes, "processed");
+        Order order = new Order(restaurant, client, courier.get(), dishes, "processed");
 
         order.getCourier().setAvailable(false);
         courierRepository.save(order.getCourier());

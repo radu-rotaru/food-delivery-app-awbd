@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import web.javaproject.fooddeliveryapp.dto.RestaurantDTO;
+import web.javaproject.fooddeliveryapp.exception.OrderDoesNotExistException;
 import web.javaproject.fooddeliveryapp.exception.RestaurantAlreadyExistsException;
 import web.javaproject.fooddeliveryapp.exception.RestaurantDoesNotExistException;
 import web.javaproject.fooddeliveryapp.model.Restaurant;
@@ -33,8 +34,14 @@ public class RestaurantServiceImpl implements RestaurantService{
         return restaurants.stream().map(restaurant -> modelMapper.map(restaurant, RestaurantDTO.class)).collect(Collectors.toList());
     }
 
-    public Optional<Restaurant> getRestaurant(Long restaurantId) {
-        return restaurantRepository.findById(restaurantId);
+    public Restaurant getRestaurant(Long restaurantId) {
+        Optional<Restaurant> restaurant = restaurantRepository.findById(restaurantId);
+
+        if(restaurant.isEmpty()) {
+            throw new RestaurantDoesNotExistException();
+        }
+
+        return restaurant.get();
     }
 
     public Restaurant getRestaurantByEmail(String email) {

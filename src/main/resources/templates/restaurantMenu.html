@@ -54,21 +54,27 @@
     </nav>
 </div>
 
-<h2> <span th:text="${client.name}"></span> orders </h2>
+<h2> <span th:text="${restaurant.name}"></span>  </h2>
+<div>
+    <p> <span th:text="${restaurant.address}"></span> </p>
+    <p> <span th:text="${restaurant.openingHours}"></span> </p>
+</div>
+
+<h3> MENU </h3>
 <div class="container">
     <table class="table table-hover ">
         <thead class="thead-inverse">
         <tr>
-            <th>Restaurant</th>
-            <th>Courier</th>
-            <th>Status</th>
+            <th>Name</th>
+            <th>Quantity</th>
+            <th>Price</th>
         </tr>
         </thead>
-        <tr th:each="order, stat : ${orders}"
+        <tr th:each="dish, stat : ${dishes}"
             th:class="${stat.odd}? 'table-light':''">
-            <td th:text="${order.restaurant}">Restaurant</td>
-            <td th:text="${order.courier}">Courier</td>
-            <td th:text="${order.status}">Status</td>
+            <td th:text="${dish.name}">Name</td>
+            <td th:text="${dish.quantity}">Quantity</td>
+            <td th:text="${dish.price}">Price</td>
         </tr>
     </table>
 </div>

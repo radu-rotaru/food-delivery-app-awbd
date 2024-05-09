@@ -31,10 +31,9 @@ public class RestaurantServiceTest {
 
         when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.of(expectedRestaurant));
 
-        Optional<Restaurant> result = restaurantService.getRestaurant(restaurantId);
+        Restaurant result = restaurantService.getRestaurant(restaurantId);
 
-        assertTrue(result.isPresent());
-        assertEquals(expectedRestaurant, result.get());
+        assertEquals(expectedRestaurant, result);
     }
 
     @Test
@@ -42,8 +41,7 @@ public class RestaurantServiceTest {
         Long restaurantId = 1L;
         when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.empty());
 
-        Optional<Restaurant> result = restaurantService.getRestaurant(restaurantId);
-        assertTrue(result.isEmpty());
+        assertThrows(RestaurantDoesNotExistException.class, () -> restaurantService.getRestaurant(restaurantId));
     }
 
     @Test

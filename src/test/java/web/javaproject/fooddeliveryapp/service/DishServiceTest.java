@@ -80,7 +80,7 @@ public class DishServiceTest {
 
         Restaurant restaurant = Mockito.mock(Restaurant.class);
 
-        when(restaurantService.getRestaurant(createDishDTO.getRestaurantId())).thenReturn(Optional.of(restaurant));
+        when(restaurantService.getRestaurant(createDishDTO.getRestaurantId())).thenReturn(restaurant);
         when(dishRepository.save(any(Dish.class))).thenReturn(new Dish("Pizza Pepes", 200, 10.99f, restaurant));
         when(restaurant.getId()).thenReturn(createDishDTO.getRestaurantId());
         when(dishMapper.createDTOtoEntity(createDishDTO)).thenReturn(new Dish());
@@ -100,7 +100,7 @@ public class DishServiceTest {
         CreateDishDTO createDishDTO = new CreateDishDTO("Pizza Pepes", 200, 10.99f, 1L);
         Restaurant restaurant = Mockito.mock(Restaurant.class);
 
-        when(restaurantService.getRestaurant(createDishDTO.getRestaurantId())).thenReturn(Optional.empty());
+        when(restaurantService.getRestaurant(createDishDTO.getRestaurantId())).thenThrow(RestaurantDoesNotExistException.class);
 
         assertThrows(RestaurantDoesNotExistException.class,
                 () -> dishService.createDish(createDishDTO));

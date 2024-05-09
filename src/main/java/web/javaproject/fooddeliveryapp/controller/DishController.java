@@ -4,6 +4,8 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import web.javaproject.fooddeliveryapp.dto.CreateDishDTO;
@@ -11,21 +13,26 @@ import web.javaproject.fooddeliveryapp.dto.DishDTO;
 import web.javaproject.fooddeliveryapp.dto.UpdateDishDTO;
 import web.javaproject.fooddeliveryapp.mapper.DishMapper;
 import web.javaproject.fooddeliveryapp.model.Dish;
+import web.javaproject.fooddeliveryapp.model.Restaurant;
 import web.javaproject.fooddeliveryapp.service.DishService;
+import web.javaproject.fooddeliveryapp.service.RestaurantService;
 import web.javaproject.fooddeliveryapp.util.ValidationCheck;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/dishes")
+@Controller
+@RequestMapping("/dishes")
 public class DishController {
     private final DishService dishService;
     private final DishMapper dishMapper;
 
+    private final RestaurantService restaurantService;
+
     @Autowired
-    public DishController(DishService dishService, DishMapper dishMapper) {
+    public DishController(DishService dishService, DishMapper dishMapper, RestaurantService restaurantService) {
         this.dishService = dishService;
         this.dishMapper = dishMapper;
+        this.restaurantService = restaurantService;
     }
 
     @GetMapping("/{id}")
@@ -80,14 +87,21 @@ public class DishController {
     }
 
     @GetMapping("/restaurant/{restaurantId}")
-    public ResponseEntity<?> getDishesByRestaurantId(@PathVariable Long restaurantId) {
+    public String getDishesByRestaurantId(@PathVariable Long restaurantId, Model model) {
         try {
             List<Dish> dishes = dishService.getDishesByRestaurantId(restaurantId);
             List<DishDTO> dishDTOs = dishMapper.toDTOsList(dishes);
 
-            return new ResponseEntity<>(dishDTOs, HttpStatus.OK);
+            Restaurant restaurant = restaurantService.getRestaurant(restaurantId);
+
+            model.addAttribute("restaurant", restaurant);
+            model.addAttribute("dishes", dishDTOs);
+
+            return "restaurantMenu";
         } catch (Exception e) {
-            return new ResponseEntity<>("Error retrieving dishes: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+            model.addAttribute("errorMessage", e.getMessage());
+
+            return "errorView";
         }
     }
 
