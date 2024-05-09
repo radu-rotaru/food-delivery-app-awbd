@@ -66,8 +66,8 @@
         </thead>
         <tr th:each="order, stat : ${orders}"
             th:class="${stat.odd}? 'table-light':''">
-            <td th:text="${order.restaurant}">Restaurant</td>
-            <td th:text="${order.courier}">Courier</td>
+            <td th:text="${order.restaurant.name}">Restaurant</td>
+            <td th:text="${order.courier.name}">Courier</td>
             <td th:text="${order.status}">Status</td>
         </tr>
     </table>

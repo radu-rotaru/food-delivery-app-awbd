@@ -1,11 +1,8 @@
 package web.javaproject.fooddeliveryapp.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
-
 import java.util.List;
 
-@Data
 @Entity
 @Table(name = "dishes")
 public class Dish {
@@ -43,5 +40,53 @@ public class Dish {
         this.quantity = quantity;
         this.price = price;
         this.restaurant = restaurant;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public float getPrice() {
+        return price;
+    }
+
+    public void setPrice(float price) {
+        this.price = price;
+    }
+
+    public Restaurant getRestaurant() {
+        return restaurant;
+    }
+
+    public void setRestaurant(Restaurant restaurant) {
+        this.restaurant = restaurant;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
     }
 }

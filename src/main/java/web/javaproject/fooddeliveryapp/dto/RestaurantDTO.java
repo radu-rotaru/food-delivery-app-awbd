@@ -1,9 +1,7 @@
 package web.javaproject.fooddeliveryapp.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
 
-@Data
 public class RestaurantDTO {
 
     @NotBlank(message = "Name cannot be blank")
@@ -20,6 +18,30 @@ public class RestaurantDTO {
     public RestaurantDTO(String name, String address, String openingHours) {
         this.name = name;
         this.address = address;
+        this.openingHours = openingHours;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getOpeningHours() {
+        return openingHours;
+    }
+
+    public void setOpeningHours(String openingHours) {
         this.openingHours = openingHours;
     }
 }
