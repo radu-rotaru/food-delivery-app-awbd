@@ -3,6 +3,7 @@ package web.javaproject.fooddeliveryapp.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
+import web.javaproject.fooddeliveryapp.exception.CourierNotAvailableException;
 import web.javaproject.fooddeliveryapp.model.Courier;
 import web.javaproject.fooddeliveryapp.repository.CourierRepository;
 
@@ -24,5 +25,15 @@ public class CourierService {
     }
     public Boolean doesExist(Long courierId) {
         return courierRepository.findById(courierId).isPresent();
+    }
+
+    public Courier findvailable() {
+        Optional<Courier> availableCourier = courierRepository.findFirstByAvailable(true);
+
+        if(availableCourier.isEmpty()) {
+            throw new CourierNotAvailableException();
+        }
+
+        return availableCourier.get();
     }
 }

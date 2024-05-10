@@ -1,5 +1,7 @@
 package web.javaproject.fooddeliveryapp.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -14,7 +16,9 @@ import web.javaproject.fooddeliveryapp.model.Order;
 import web.javaproject.fooddeliveryapp.service.ClientService;
 import web.javaproject.fooddeliveryapp.service.OrderService;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/order")
@@ -34,8 +38,16 @@ public class OrderController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestBody CreateOrderDTO createOrderDTO) {
+    public ResponseEntity<?> create(HttpServletRequest request) {
         try {
+            Long restaurantId = Long.parseLong(request.getParameter("restaurantId"));
+            Long clientId = Long.parseLong(request.getParameter("clientId"));
+            List<Long> dishesIds = Arrays.stream(request.getParameter("dishesIds").split(","))
+                    .map(Long::valueOf)
+                    .toList();
+
+            CreateOrderDTO createOrderDTO = new CreateOrderDTO(clientId, restaurantId, dishesIds);
+
             Order order = orderService.createOrder(createOrderDTO);
             OrderDTO orderDTO = orderMapper.toDTO(order);
 
