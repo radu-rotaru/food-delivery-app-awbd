@@ -4,6 +4,7 @@ import java.util.List;
 
 public class CreateOrderDTO {
     private Long clientId;
+    private Long courierId;
     private Long restaurantId;
 
     private List<Long> dishesIds;
@@ -11,8 +12,9 @@ public class CreateOrderDTO {
     public CreateOrderDTO() {
     }
 
-    public CreateOrderDTO(Long clientId, Long restaurantId, List<Long> dishesIds) {
+    public CreateOrderDTO(Long clientId, Long courierId, Long restaurantId, List<Long> dishesIds) {
         this.clientId = clientId;
+        this.courierId = courierId;
         this.restaurantId = restaurantId;
         this.dishesIds = dishesIds;
     }
@@ -23,6 +25,14 @@ public class CreateOrderDTO {
 
     public void setClientId(Long clientId) {
         this.clientId = clientId;
+    }
+
+    public Long getCourierId() {
+        return courierId;
+    }
+
+    public void setCourierId(Long courierId) {
+        this.courierId = courierId;
     }
 
     public Long getRestaurantId() {

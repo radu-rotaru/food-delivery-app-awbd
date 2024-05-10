@@ -4,10 +4,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import web.javaproject.fooddeliveryapp.dto.ClientDTO;
+import web.javaproject.fooddeliveryapp.dto.RestaurantDTO;
 import web.javaproject.fooddeliveryapp.exception.ClientAlreadyExistsException;
 import web.javaproject.fooddeliveryapp.exception.ClientDoesNotExistException;
 import web.javaproject.fooddeliveryapp.exception.CourierDoesNotExistException;
 import web.javaproject.fooddeliveryapp.model.Client;
+import web.javaproject.fooddeliveryapp.model.Restaurant;
 import web.javaproject.fooddeliveryapp.repository.ClientRepository;
 
 import java.util.LinkedList;
@@ -52,4 +54,13 @@ public class ClientServiceImpl implements ClientService {
 
         return client.get();
     }
+
+    @Override
+    public ClientDTO save (ClientDTO client) {
+        Client savedClient = clientRepository.save(modelMapper.map(client, Client.class));
+        return modelMapper.map(savedClient, ClientDTO.class);
+    }
+
+    @Override
+    public void deleteById(Long id) {clientRepository.deleteById(id);}
 }

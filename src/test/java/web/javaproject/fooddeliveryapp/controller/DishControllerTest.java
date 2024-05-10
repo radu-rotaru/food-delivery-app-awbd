@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import web.javaproject.fooddeliveryapp.dto.CreateDishDTO;
 import web.javaproject.fooddeliveryapp.dto.DishDTO;
+import web.javaproject.fooddeliveryapp.dto.UpdateDishDTO;
 import web.javaproject.fooddeliveryapp.exception.DishDoesNotExistException;
 import web.javaproject.fooddeliveryapp.exception.RestaurantDoesNotExistException;
 import web.javaproject.fooddeliveryapp.mapper.DishMapper;
@@ -37,9 +38,9 @@ public class DishControllerTest {
     @Test
     public void testUpdateDish_SuccessfulUpdate() {
         Long dishId = 1L;
-        DishDTO updateDishDTO = new DishDTO(dishId, "Updated Dish", 5, 15.99f);
+        UpdateDishDTO updateDishDTO = new UpdateDishDTO("Updated Dish", 5, 15.99f, dishId);
         Dish updatedDish = new Dish(dishId, "Updated Dish", 5, 15.99f);
-        DishDTO updatedDishDTO = new DishDTO(dishId, "Updated Dish", 5, 15.99f);
+        DishDTO updatedDishDTO = new DishDTO("Updated Dish", 5, 15.99f);
 
         when(dishMapper.toEntity(updateDishDTO)).thenReturn(updatedDish);
         when(dishService.updateDish(updatedDish)).thenReturn(updatedDish);
@@ -54,7 +55,7 @@ public class DishControllerTest {
     @Test
     public void testUpdateDish_IdMismatch() {
         Long dishId = 1L;
-        DishDTO updateDishDTO = new DishDTO(dishId + 1, "Updated Dish", 5, 15.99f);
+        UpdateDishDTO updateDishDTO = new UpdateDishDTO("Updated Dish", 5, 15.99f, dishId + 1);
 
         ResponseEntity<?> responseEntity = dishController.update(dishId, updateDishDTO, mock(BindingResult.class));
 
@@ -65,7 +66,7 @@ public class DishControllerTest {
     @Test
     public void testUpdateDish_ValidationErrors() {
         Long dishId = 1L;
-        DishDTO updateDishDTO = new DishDTO(dishId, "", -5, -15.99f);
+        UpdateDishDTO updateDishDTO = new UpdateDishDTO("", -5, -15.99f, dishId);
         BindingResult bindingResult = mock(BindingResult.class);
 
         when(bindingResult.hasErrors()).thenReturn(true);
@@ -84,7 +85,7 @@ public class DishControllerTest {
     @Test
     public void testUpdateDish_DishDoesNotExist() {
         Long dishId = 1L;
-        DishDTO updateDishDTO = new DishDTO(dishId, "Updated Dish", 5, 15.99f);
+        UpdateDishDTO updateDishDTO = new UpdateDishDTO("Updated Dish", 5, 15.99f, dishId);
 
         when(dishMapper.toEntity(updateDishDTO)).thenReturn(new Dish(dishId, "Updated Dish", 5, 15.99f));
         when(dishService.updateDish(any())).thenThrow(new DishDoesNotExistException());

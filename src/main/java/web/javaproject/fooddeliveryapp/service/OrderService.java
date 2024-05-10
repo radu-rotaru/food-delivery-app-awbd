@@ -44,7 +44,14 @@ public class OrderService {
 
         Restaurant restaurant = restaurantService.getRestaurant(createOrderDTO.getRestaurantId());
 
-        Courier courier = courierService.findvailable();
+        Optional<Courier> courier = courierService.getCourier(createOrderDTO.getCourierId());
+        if (courier.isEmpty()) {
+            throw new CourierDoesNotExistException();
+        }
+
+        if (!courier.get().isAvailable()) {
+            throw new CourierNotAvailableException();
+        }
 
         List<Dish> dishes = new ArrayList<>();
         for (Long dishesId : createOrderDTO.getDishesIds()) {
@@ -57,7 +64,7 @@ public class OrderService {
             dishes.add(dish);
         }
 
-        Order order = new Order(restaurant, client, courier, dishes, "processed");
+        Order order = new Order(restaurant, client, courier.get(), dishes, "processed");
 
         order.getCourier().setAvailable(false);
         courierRepository.save(order.getCourier());
