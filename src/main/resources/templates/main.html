@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>AWBD Auction</title>
+    <title>Food Delivery</title>
 
     <script src="/webjars/jquery/3.6.0/jquery.min.js"></script>
     <script src="/webjars/bootstrap/5.3.2/js/bootstrap.min.js"></script>
@@ -20,10 +20,13 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto topnav">
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{'/restaurants'}">Restaurants</a>
+                    <a class="nav-link" th:href="@{'/restaurant'}">Restaurants</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{'/clients'}">Couriers</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{'/courier'}">Couriers</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link btn-primary" th:href="@{'/restaurant/form'}">
@@ -38,9 +41,16 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link btn-primary" th:href="@{'/courier/form'}">
+                    <a class="nav-link btn-primary" th:href="@{'/register'}">
                         <i class="fas fa-user-plus"></i> Register
                     </a>
+                </li>
+                <li class="nav-item">
+                    <form id="logout-form" th:action="@{/logout}" method="post">
+                        <button type="submit" class="nav-link btn-primary">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </form>
                 </li>
             </ul>
         </div>

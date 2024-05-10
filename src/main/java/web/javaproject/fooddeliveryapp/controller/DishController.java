@@ -9,8 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import web.javaproject.fooddeliveryapp.dto.CreateDishDTO;
-import web.javaproject.fooddeliveryapp.dto.CreateOrderDTO;
 import web.javaproject.fooddeliveryapp.dto.DishDTO;
+import web.javaproject.fooddeliveryapp.dto.UpdateDishDTO;
 import web.javaproject.fooddeliveryapp.mapper.DishMapper;
 import web.javaproject.fooddeliveryapp.model.Dish;
 import web.javaproject.fooddeliveryapp.model.Restaurant;
@@ -25,6 +25,7 @@ import java.util.List;
 public class DishController {
     private final DishService dishService;
     private final DishMapper dishMapper;
+
     private final RestaurantService restaurantService;
 
     @Autowired
@@ -64,8 +65,8 @@ public class DishController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody @Valid DishDTO dishDTO, BindingResult bindingResult) {
-        if (id != dishDTO.getId()) {
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody @Valid UpdateDishDTO updateDishDTO, BindingResult bindingResult) {
+        if (id != updateDishDTO.getId()) {
             return  ResponseEntity.badRequest().body("Ids must match!");
         }
 
@@ -75,7 +76,7 @@ public class DishController {
         }
 
         try {
-            Dish dish = dishMapper.toEntity(dishDTO);
+            Dish dish = dishMapper.toEntity(updateDishDTO);
             Dish updatedDish = dishService.updateDish(dish);
             DishDTO updatedDishDTO = dishMapper.toDTO(updatedDish);
 
