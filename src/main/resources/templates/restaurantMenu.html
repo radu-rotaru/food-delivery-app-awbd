@@ -75,9 +75,69 @@
             <td th:text="${dish.name}">Name</td>
             <td th:text="${dish.quantity}">Quantity</td>
             <td th:text="${dish.price}">Price</td>
+            <td>
+                <button class="btn btn-primary add-to-list" th:attr="data-dish-id=${dish.id}, data-dish-name=${dish.name}">
+                    Add to List
+                </button>
+            </td>
         </tr>
     </table>
 </div>
 
+<div id="selected-dishes-list"></div>
+
+<form th:action="@{/order/create}" id="orderForm" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="restaurantId" th:value="${restaurant.id}">
+    <input type="hidden" name="clientId" th:value="1">
+    <input type="hidden" id="selectedDishesInput" name="dishesIds">
+    <button type="submit">Submit</button>
+</form>
+
+<!--<form th:action="@{/order/create}" th:object="${order}" id="orderForm" method="post">-->
+<!--    <input type="hidden" th:field="*{dishesIds}" id="selectedDishesInput">-->
+<!--    <input type="hidden" th:field="*{restaurantId}">-->
+<!--    <input type="hidden" th:field="*{clientId}">-->
+<!--    <button type="submit">Submit</button>-->
+<!--</form>-->
+
 </body>
 </html>
+
+<script>
+    $(document).ready(function() {
+        var selectedDishIds = [];
+        var selectedDishNames = [];
+
+        function updateFormValue() {
+            $('#selectedDishesInput').val(selectedDishIds.join(','));
+        }
+
+        function toggleFormVisibility() {
+            if (selectedDishIds.length > 0) {
+                $('#dish-list-form').show();
+            } else {
+                $('#dish-list-form').hide();
+            }
+        }
+
+        function updateSelectedDishesList() {
+            $('#selected-dishes-list').html('<h4>Selected Dishes:</h4><ul><li>' + selectedDishNames.join('</li><li>') + '</li></ul>');
+        }
+
+        $('.add-to-list').click(function() {
+            var dishId = $(this).data('dish-id');
+            var dishName = $(this).data('dish-name');
+
+            if (!selectedDishIds.includes(dishId)) {
+                selectedDishIds.push(dishId);
+                selectedDishNames.push(dishName);
+
+                updateFormValue();
+
+                toggleFormVisibility();
+
+                updateSelectedDishesList();
+            }
+        });
+    });
+</script>

@@ -3,7 +3,6 @@ package web.javaproject.fooddeliveryapp.mapper;
 import org.mapstruct.Mapper;
 import web.javaproject.fooddeliveryapp.dto.CreateDishDTO;
 import web.javaproject.fooddeliveryapp.dto.DishDTO;
-import web.javaproject.fooddeliveryapp.dto.UpdateDishDTO;
 import web.javaproject.fooddeliveryapp.model.Dish;
 
 import java.util.List;
@@ -13,7 +12,7 @@ public interface DishMapper {
     DishDTO toDTO(Dish dish);
     List<DishDTO> toDTOsList(List<Dish> dishes);
 
-    Dish toEntity(UpdateDishDTO updateDishDTO);
+    Dish toEntity(DishDTO updateDishDTO);
 
     Dish createDTOtoEntity(CreateDishDTO createDishDTO);
 }
