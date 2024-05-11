@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Food Delivery</title>
@@ -70,7 +70,7 @@
             <td th:text="${dish.name}">Name</td>
             <td th:text="${dish.quantity}">Quantity</td>
             <td th:text="${dish.price}">Price</td>
-            <td>
+            <td th:if="${#lists.contains(#authentication.authorities.![authority], 'CLIENT')}">
                 <button class="btn btn-primary add-to-list" th:attr="data-dish-id=${dish.id}, data-dish-name=${dish.name}">
                     Add to List
                 </button>
@@ -79,11 +79,11 @@
     </table>
 </div>
 
-<div id="selected-dishes-list"></div>
+<div th:if="${#lists.contains(#authentication.authorities.![authority], 'CLIENT')}" id="selected-dishes-list"></div>
 
-<form th:action="@{/order/create}" id="orderForm" method="post" enctype="multipart/form-data">
+<form th:if="${#lists.contains(#authentication.authorities.![authority], 'CLIENT')}" th:action="@{/order/create}" id="orderForm" method="post" enctype="multipart/form-data">
     <input type="hidden" name="restaurantId" th:value="${restaurant.id}">
-    <input type="hidden" name="clientId" th:value="1">
+    <input type="hidden" name="clientId" th:value="${#authentication.principal.associatedId}">
     <input type="hidden" id="selectedDishesInput" name="dishesIds">
     <button type="submit">Submit</button>
 </form>

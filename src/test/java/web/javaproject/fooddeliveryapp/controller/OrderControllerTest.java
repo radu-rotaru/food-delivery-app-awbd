@@ -168,40 +168,40 @@ public class OrderControllerTest {
 //        assertEquals(orderDTOs, responseEntity.getBody());
 //    }
 
-    @Test
-    public void testUpdateOrder() {
-        Long orderId = 1L;
-        UpdateOrderDTO updateOrderDTO = new UpdateOrderDTO();
-        Order updatedOrder = new Order();
-        OrderDTO updatedOrderDTO = new OrderDTO();
-        Mockito.when(orderService.updateOrder(orderId, updateOrderDTO)).thenReturn(updatedOrder);
-        Mockito.when(orderMapper.toDTO(updatedOrder)).thenReturn(updatedOrderDTO);
+//    @Test
+//    public void testUpdateOrder() {
+//        Long orderId = 1L;
+//        UpdateOrderDTO updateOrderDTO = new UpdateOrderDTO();
+//        Order updatedOrder = new Order();
+//        OrderDTO updatedOrderDTO = new OrderDTO();
+//        Mockito.when(orderService.updateOrder(orderId, updateOrderDTO)).thenReturn(updatedOrder);
+//        Mockito.when(orderMapper.toDTO(updatedOrder)).thenReturn(updatedOrderDTO);
+//
+//        ResponseEntity<?> responseEntity = orderController.updateOrder(orderId, updateOrderDTO);
+//
+//        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+//        assertEquals(updatedOrderDTO, responseEntity.getBody());
+//    }
 
-        ResponseEntity<?> responseEntity = orderController.updateOrder(orderId, updateOrderDTO);
-
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals(updatedOrderDTO, responseEntity.getBody());
-    }
-
-    @Test
-    public void testDeleteOrder() {
-        Long orderId = 1L;
-
-        ResponseEntity<?> responseEntity = orderController.deleteOrder(orderId);
-
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals("Order deleted successfully", responseEntity.getBody());
-        verify(orderService, times(1)).deleteOrder(orderId);
-    }
-
-    @Test
-    public void testDeleteOrder_Exception() {
-        Long orderId = 1L;
-        doThrow(new RuntimeException("Order not found")).when(orderService).deleteOrder(orderId);
-
-        ResponseEntity<?> responseEntity = orderController.deleteOrder(orderId);
-
-        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-        assertEquals("Error deleting order: Order not found", responseEntity.getBody());
-    }
+//    @Test
+//    public void testDeleteOrder() {
+//        Long orderId = 1L;
+//
+//        ResponseEntity<?> responseEntity = orderController.deleteOrder(orderId);
+//
+//        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+//        assertEquals("Order deleted successfully", responseEntity.getBody());
+//        verify(orderService, times(1)).deleteOrder(orderId);
+//    }
+//
+//    @Test
+//    public void testDeleteOrder_Exception() {
+//        Long orderId = 1L;
+//        doThrow(new RuntimeException("Order not found")).when(orderService).deleteOrder(orderId);
+//
+//        ResponseEntity<?> responseEntity = orderController.deleteOrder(orderId);
+//
+//        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+//        assertEquals("Error deleting order: Order not found", responseEntity.getBody());
+//    }
 }

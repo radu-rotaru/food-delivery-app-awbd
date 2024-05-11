@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.*;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
+import web.javaproject.fooddeliveryapp.model.security.CustomUserDetails;
 import web.javaproject.fooddeliveryapp.repository.security.UserRepository;
 import web.javaproject.fooddeliveryapp.model.security.User;
 import web.javaproject.fooddeliveryapp.model.security.Authority;
@@ -24,7 +25,7 @@ public class JpaUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public CustomUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user;
 
         Optional<User> userOpt = userRepository.findByUsername(username);
@@ -35,8 +36,8 @@ public class JpaUserDetailsService implements UserDetailsService {
 
         log.info(user.toString());
 
-        return new org.springframework.security.core.userdetails.User(user.getUsername(),
-                user.getPassword(),user.getEnabled(), user.getAccountNonExpired(),
+        return new CustomUserDetails(user.getUsername(),
+                user.getPassword(), user.getAssociatedId(), user.getEnabled(), user.getAccountNonExpired(),
                 user.getCredentialsNonExpired(),user.getAccountNonLocked(),
                 getAuthorities(user.getAuthorities()));
     }
