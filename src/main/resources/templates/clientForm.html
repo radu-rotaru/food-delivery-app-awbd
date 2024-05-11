@@ -35,16 +35,14 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link btn-primary" th:href="@{'/client/form'}">
-                        <i class="fas fa-plus-circle"></i> Sell
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn-primary" th:href="@{'/courier/form'}">
                     </a>
                 </li>
             </ul>
             <ul class="navbar-nav ms-auto topnav">
-                <li class="nav-item">
-                    <a class="nav-link btn-primary" th:href="@{'/login'}">
-                        <i class="fas fa-sign-in-alt"></i> Sign In
-                    </a>
-                </li>
                 <li class="nav-item">
                     <form id="logout-form" th:action="@{/logout}" method="post">
                         <button type="submit" class="nav-link btn-primary">
@@ -58,12 +56,6 @@
 </div>
 <form enctype="multipart/form-data" method="post" th:action="@{/client}" th:object="${client}">
     <input th:field="*{id}" type="hidden"/>
-    <input th:field="*{name}" type="hidden"/>
-    <input th:field="*{email}" type="hidden"/>
-    <input th:field="*{address}" type="hidden"/>
-    <!--    &lt;!&ndash;<input th:field="*{seller.id}" type="hidden"/>&ndash;&gt;-->
-    <!--    <input th:field="*{info.photo}" type="hidden"/>-->
-    <!--    <input th:field="*{info.product}" type="hidden"/>-->
     <div class="container" style="margin-top: 50px">
         <div class="panel panel-default">
             <div  class="panel-heading">
