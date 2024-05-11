@@ -12,4 +12,5 @@ public interface ClientService {
     public Client getClient(Long clientId);
     ClientDTO save(ClientDTO clientDTO);
     void deleteById (Long id);
+    ClientDTO findById(Long id);
 }

@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 
 public class ClientDTO {
 
+    private Long id;
     @NotBlank(message = "Name cannot be blank")
     private String name;
     @Email(message = "Invalid email format")
@@ -15,10 +16,11 @@ public class ClientDTO {
     public ClientDTO() {
     }
 
-    public ClientDTO(String name, String email, String address) {
+    public ClientDTO(String name, String email, String address, Long id) {
         this.name = name;
         this.email = email;
         this.address = address;
+        this.id = id;
     }
 
     public String getName() {
@@ -44,4 +46,7 @@ public class ClientDTO {
     public void setAddress(String address) {
         this.address = address;
     }
+
+    public Long getId() {return id;}
+    public void setId(Long id) {this.id = id;}
 }
