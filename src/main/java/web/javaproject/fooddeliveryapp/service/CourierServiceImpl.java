@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import web.javaproject.fooddeliveryapp.dto.CourierDTO;
+import web.javaproject.fooddeliveryapp.exception.CourierNotAvailableException;
 import web.javaproject.fooddeliveryapp.model.Courier;
 import web.javaproject.fooddeliveryapp.repository.CourierRepository;
 
@@ -50,5 +51,15 @@ public class CourierServiceImpl implements CourierService{
 
     @Override
     public void deleteById(Long id){courierRepository.deleteById(id);}
+
+    public Courier findAvailable() {
+        Optional<Courier> availableCourier = courierRepository.findFirstByAvailable(true);
+
+        if(availableCourier.isEmpty()) {
+            throw new CourierNotAvailableException();
+        }
+
+        return availableCourier.get();
+    }
 
 }

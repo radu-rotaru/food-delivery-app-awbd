@@ -12,4 +12,5 @@ public interface CourierService {
     public Boolean doesExist(Long courierId);
     CourierDTO save(CourierDTO courierDTO);
     void deleteById(Long id);
+    Courier findAvailable();
 }

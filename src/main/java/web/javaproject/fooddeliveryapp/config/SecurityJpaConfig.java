@@ -21,7 +21,4 @@ public class SecurityJpaConfig {
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-
-
 }
