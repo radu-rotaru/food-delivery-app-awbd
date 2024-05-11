@@ -34,17 +34,6 @@ public class RestaurantServiceImpl implements RestaurantService{
         return restaurants.stream().map(restaurant -> modelMapper.map(restaurant, RestaurantDTO.class)).collect(Collectors.toList());
     }
 
-    @Override
-    public RestaurantDTO findById(Long l) {
-        Optional<Restaurant> restaurantOptional = restaurantRepository.findById(l);
-        if (!restaurantOptional.isPresent()) {
-            throw new RestaurantDoesNotExistException();
-            //throw new RuntimeException("Product not found!");
-        }
-        return modelMapper.map(restaurantOptional.get(), RestaurantDTO.class);
-    }
-
-    @Override
     public Restaurant getRestaurant(Long restaurantId) {
         Optional<Restaurant> restaurant = restaurantRepository.findById(restaurantId);
 
@@ -74,13 +63,4 @@ public class RestaurantServiceImpl implements RestaurantService{
 
         return restaurantRepository.save(restaurant);
     }
-
-    @Override
-    public RestaurantDTO save (RestaurantDTO restaurant) {
-        Restaurant savedRestaurant = restaurantRepository.save(modelMapper.map(restaurant, Restaurant.class));
-        return modelMapper.map(savedRestaurant, RestaurantDTO.class);
-    }
-
-    @Override
-    public void deleteById(Long id){restaurantRepository.deleteById(id);}
 }

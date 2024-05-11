@@ -26,11 +26,11 @@ public class DataLoader implements CommandLineRunner {
             Authority restaurantRole = authorityRepository.save(Authority.builder().role("RESTAURANT").build());
             Authority courierRole = authorityRepository.save(Authority.builder().role("COURIER").build());
 
-           User admin = User.builder()
-                   .username("admin")
+            User admin = User.builder()
+                    .username("admin")
                     .password(passwordEncoder.encode("12345"))
                     .authority(adminRole)
-                 .build();
+                    .build();
 
             User client = User.builder()
                     .username("client")
@@ -39,25 +39,26 @@ public class DataLoader implements CommandLineRunner {
                     .authority(clientRole)
                     .build();
 
+
             User restaurant = User.builder()
-                   .username("restaurant")
-                   .password(passwordEncoder.encode("12345"))
-                   .associatedId(1L)
-                   .authority(restaurantRole)
+                    .username("restaurant")
+                    .password(passwordEncoder.encode("12345"))
+                    .associatedId(1L)
+                    .authority(restaurantRole)
                     .build();
 
 
-          User courier = User.builder()
-                   .username("courier")
-                  .password(passwordEncoder.encode("12345"))
+            User courier = User.builder()
+                    .username("courier")
+                    .password(passwordEncoder.encode("12345"))
                     .associatedId(1L)
                     .authority(courierRole)
-                   .build();
+                    .build();
 
-           userRepository.save(admin);
-           userRepository.save(client);
-           userRepository.save(restaurant);
-           userRepository.save(courier);
+            userRepository.save(admin);
+            userRepository.save(client);
+            userRepository.save(restaurant);
+            userRepository.save(courier);
         }
     }
 

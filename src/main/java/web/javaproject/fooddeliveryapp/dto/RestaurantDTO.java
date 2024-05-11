@@ -4,8 +4,6 @@ import jakarta.validation.constraints.NotBlank;
 
 public class RestaurantDTO {
 
-    private Long id;
-
     @NotBlank(message = "Name cannot be blank")
     private String name;
 
@@ -15,12 +13,6 @@ public class RestaurantDTO {
     private String openingHours;
 
     public RestaurantDTO() {
-    }
-    public RestaurantDTO(String name, String address, String openingHours, Long id) {
-        this.id = id;
-        this.name = name;
-        this.address = address;
-        this.openingHours = openingHours;
     }
 
     public RestaurantDTO(String name, String address, String openingHours) {
@@ -52,8 +44,4 @@ public class RestaurantDTO {
     public void setOpeningHours(String openingHours) {
         this.openingHours = openingHours;
     }
-
-    public Long getId() {return id; }
-    public void setId(Long id) { this.id = id; }
-
 }

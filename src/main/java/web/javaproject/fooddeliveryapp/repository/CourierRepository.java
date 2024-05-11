@@ -7,5 +7,7 @@ import java.util.Optional;
 
 public interface CourierRepository extends JpaRepository<Courier, Long> {
     Optional<Courier> findByPhoneNumber(String phoneNumber);
+
+    Optional<Courier> findFirstByAvailable(Boolean available);
 }
 

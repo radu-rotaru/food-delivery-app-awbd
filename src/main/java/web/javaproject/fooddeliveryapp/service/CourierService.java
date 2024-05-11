@@ -1,15 +1,39 @@
 package web.javaproject.fooddeliveryapp.service;
 
-import web.javaproject.fooddeliveryapp.dto.CourierDTO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
+import web.javaproject.fooddeliveryapp.exception.CourierNotAvailableException;
 import web.javaproject.fooddeliveryapp.model.Courier;
+import web.javaproject.fooddeliveryapp.repository.CourierRepository;
 
-import java.util.List;
 import java.util.Optional;
 
-public interface CourierService {
-    List<CourierDTO> findAll();
-    Optional<Courier> getCourier(Long id);
-    public Boolean doesExist(Long courierId);
-    CourierDTO save(CourierDTO courierDTO);
-    void deleteById(Long id);
+@Service
+@Validated
+public class CourierService {
+
+    private final CourierRepository courierRepository;
+
+    @Autowired
+    public CourierService(CourierRepository courierRepository) {
+        this.courierRepository = courierRepository;
+    }
+
+    public Optional<Courier> getCourier(Long courierId) {
+        return courierRepository.findById(courierId);
+    }
+    public Boolean doesExist(Long courierId) {
+        return courierRepository.findById(courierId).isPresent();
+    }
+
+    public Courier findvailable() {
+        Optional<Courier> availableCourier = courierRepository.findFirstByAvailable(true);
+
+        if(availableCourier.isEmpty()) {
+            throw new CourierNotAvailableException();
+        }
+
+        return availableCourier.get();
+    }
 }
