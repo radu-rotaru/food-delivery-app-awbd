@@ -14,10 +14,10 @@ public class Courier {
     private String phoneNumber;
     private boolean available;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "courier")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "courier", cascade = CascadeType.REMOVE)
     private List<Order> orders;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "courier")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "courier", cascade = CascadeType.REMOVE)
     private List<CourierReview> courierReviews;
 
 

@@ -1,40 +1,61 @@
 package web.javaproject.fooddeliveryapp.dto;
 
 public class CourierReviewDTO {
-    private ClientDTO clientDTO;
-    private CourierDTO courierDTO;
-    private OrderIdDTO orderIdDTO;
+    private Long id;
+    private ClientDTO client;
+    private CourierDTO courier;
+    private OrderDTO order;
+
+    private int stars;
 
     public CourierReviewDTO() {
     }
 
-    public CourierReviewDTO(ClientDTO clientDTO, CourierDTO courierDTO, OrderIdDTO orderIdDTO) {
-        this.clientDTO = clientDTO;
-        this.courierDTO = courierDTO;
-        this.orderIdDTO = orderIdDTO;
+    public CourierReviewDTO(Long id, ClientDTO client, CourierDTO courier, OrderDTO order, int stars) {
+        this.id = id;
+        this.client = client;
+        this.courier = courier;
+        this.order = order;
+        this.stars = stars;
     }
 
-    public ClientDTO getClientDTO() {
-        return clientDTO;
+    public Long getId() {
+        return id;
     }
 
-    public void setClientDTO(ClientDTO clientDTO) {
-        this.clientDTO = clientDTO;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public CourierDTO getCourierDTO() {
-        return courierDTO;
+    public int getStars() {
+        return stars;
     }
 
-    public void setCourierDTO(CourierDTO courierDTO) {
-        this.courierDTO = courierDTO;
+    public void setStars(int stars) {
+        this.stars = stars;
     }
 
-    public OrderIdDTO getOrderIdDTO() {
-        return orderIdDTO;
+    public ClientDTO getClient() {
+        return client;
     }
 
-    public void setOrderIdDTO(OrderIdDTO orderIdDTO) {
-        this.orderIdDTO = orderIdDTO;
+    public void setClient(ClientDTO client) {
+        this.client = client;
+    }
+
+    public CourierDTO getCourier() {
+        return courier;
+    }
+
+    public void setCourier(CourierDTO courier) {
+        this.courier = courier;
+    }
+
+    public OrderDTO getOrder() {
+        return order;
+    }
+
+    public void setOrder(OrderDTO order) {
+        this.order = order;
     }
 }

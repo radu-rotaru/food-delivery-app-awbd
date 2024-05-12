@@ -15,3 +15,5 @@ insert into dishes (id, name, quantity, price, restaurant_id) values (1, 'Pizza'
 insert into dishes (id, name, quantity, price, restaurant_id) values (2, 'Pasta', 500, 14.99, 1);
 
 insert into order_dish (order_id, dish_id) values (1, 1);
+
+insert into courier_reviews (id, order_id, courier_id, client_id, stars) values (1, 1, 1, 1, 4);

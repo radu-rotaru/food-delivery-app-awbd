@@ -1,88 +1,132 @@
 package web.javaproject.fooddeliveryapp.controller;
 
-import jakarta.validation.Valid;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import web.javaproject.fooddeliveryapp.dto.CreateDishDTO;
 import web.javaproject.fooddeliveryapp.dto.DishDTO;
+import web.javaproject.fooddeliveryapp.dto.RestaurantDTO;
 import web.javaproject.fooddeliveryapp.mapper.DishMapper;
+import web.javaproject.fooddeliveryapp.mapper.RestaurantMapper;
 import web.javaproject.fooddeliveryapp.model.Dish;
 import web.javaproject.fooddeliveryapp.model.Restaurant;
+import web.javaproject.fooddeliveryapp.model.security.CustomUserDetails;
 import web.javaproject.fooddeliveryapp.service.DishService;
 import web.javaproject.fooddeliveryapp.service.RestaurantService;
-import web.javaproject.fooddeliveryapp.util.ValidationCheck;
 
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/dishes")
 public class DishController {
     private final DishService dishService;
     private final DishMapper dishMapper;
-
     private final RestaurantService restaurantService;
+    private final RestaurantMapper restaurantMapper;
 
     @Autowired
-    public DishController(DishService dishService, DishMapper dishMapper, RestaurantService restaurantService) {
+    public DishController(DishService dishService, DishMapper dishMapper, RestaurantService restaurantService, RestaurantMapper restaurantMapper) {
         this.dishService = dishService;
         this.dishMapper = dishMapper;
         this.restaurantService = restaurantService;
+        this.restaurantMapper = restaurantMapper;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getDishById(@PathVariable Long id) {
-        try {
-            Dish dish = dishService.getDish(id);
-            DishDTO dishDTO = dishMapper.toDTO(dish);
+    @RequestMapping("/edit/{id}")
+    public String edit(@PathVariable String id, Model model){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        GrantedAuthority firstAuthority = authentication.getAuthorities().stream().findFirst().orElse(null);
+        if(firstAuthority == null) {
+            return "access_denied";
+        }
 
-            return new ResponseEntity<>(dishDTO, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>("Error retrieving dish: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+        Dish dish = dishService.getDish(Long.parseLong(id));
+        if(Objects.equals(firstAuthority.getAuthority(), "RESTAURANT")) {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+            if(!Objects.equals(dish.getRestaurant().getId(), userDetails.getAssociatedId())) {
+                return "access_denied";
+            }
+        }
+
+        model.addAttribute("dish", dishService.getDish(Long.valueOf(id)));
+        return "dishForm";
+    }
+
+    @PostMapping("")
+    public String saveOrUpdate(HttpServletRequest request, Model model){
+        try {
+            Long id = Long.parseLong(request.getParameter("id"));
+            Long restaurantId = Long.parseLong(request.getParameter("restaurantId"));
+            String name = request.getParameter("dish_name");
+            Float price = Float.parseFloat(request.getParameter("dish_price"));
+            int quantity = Integer.parseInt(request.getParameter("dish_quantity"));
+
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            GrantedAuthority firstAuthority = authentication.getAuthorities().stream().findFirst().orElse(null);
+            if (firstAuthority == null) {
+                return "access_denied";
+            }
+
+            if (Objects.equals(firstAuthority.getAuthority(), "RESTAURANT")) {
+                CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+                if (!Objects.equals(restaurantId, userDetails.getAssociatedId())) {
+                    return "access_denied";
+                }
+            }
+
+            RestaurantDTO restaurantDTO = restaurantMapper.toDto(restaurantService.getRestaurant(restaurantId));
+            DishDTO dish = new DishDTO(id, name, quantity, price, restaurantDTO);
+
+            dishService.save(dish);
+
+            return "redirect:/dishes/restaurant/" + dish.getRestaurant().getId();
+        }
+        catch (Exception e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "errorView";
         }
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestBody @Valid CreateDishDTO createDishDTO, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            String errorMessage = ValidationCheck.extractValidationErrorMessage(bindingResult);
-            return ResponseEntity.badRequest().body(errorMessage);
+    @RequestMapping("/delete/{id}")
+    public String deleteById(@PathVariable String id){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        GrantedAuthority firstAuthority = authentication.getAuthorities().stream().findFirst().orElse(null);
+        if(firstAuthority == null) {
+            return "access_denied";
         }
 
-        try {
-            Dish createdDish = dishService.createDish(createDishDTO);
-            DishDTO createdDishDTO = dishMapper.toDTO(createdDish);
+        Dish dish = dishService.getDish(Long.parseLong(id));
+        if(Objects.equals(firstAuthority.getAuthority(), "RESTAURANT")) {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
-            return new ResponseEntity<>(createdDishDTO, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>("Error creating dish: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+            if (!Objects.equals(dish.getRestaurant().getId(), userDetails.getAssociatedId())) {
+                return "access_denied";
+            }
         }
+
+        dishService.deleteById(Long.valueOf(id));
+        return "redirect:/dish";
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody @Valid DishDTO dishDTO, BindingResult bindingResult) {
-        if (id != dishDTO.getId()) {
-            return  ResponseEntity.badRequest().body("Ids must match!");
-        }
+    @RequestMapping("/form")
+    public String dishForm(Model model){
+        Dish dish = new Dish();
 
-        if (bindingResult.hasErrors()) {
-            String errorMessage = ValidationCheck.extractValidationErrorMessage(bindingResult);
-            return ResponseEntity.badRequest().body(errorMessage);
-        }
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
-        try {
-            Dish dish = dishMapper.toEntity(dishDTO);
-            Dish updatedDish = dishService.updateDish(dish);
-            DishDTO updatedDishDTO = dishMapper.toDTO(updatedDish);
+        Restaurant restaurant = restaurantService.getRestaurant(userDetails.getAssociatedId());
+        dish.setRestaurant(restaurant);
 
-            return new ResponseEntity<>(updatedDishDTO, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>("Error updating dish: " + e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+        model.addAttribute("dish", dish);
+        return "dishForm";
     }
 
     @GetMapping("/restaurant/{restaurantId}")
@@ -103,31 +147,4 @@ public class DishController {
             return "errorView";
         }
     }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteDish(@PathVariable Long id) {
-        try {
-            dishService.deleteDish(id);
-            return new ResponseEntity<>("Dish deleted successfully", HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>("Error deleting dish: " + e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-//    @PostMapping("/create")
-//    public ResponseEntity<?> create(@RequestBody @Valid CreateDishDTO createDishDTO, BindingResult bindingResult) {
-//        if (bindingResult.hasErrors()) {
-//            String errorMessage = ValidationCheck.extractValidationErrorMessage(bindingResult);
-//            return ResponseEntity.badRequest().body(errorMessage);
-//        }
-//
-//        try {
-//            Dish createdDish = dishService.createDish(createDishDTO);
-//            DishDTO createdDishDTO = dishMapper.toDTO(createdDish);
-//
-//            return new ResponseEntity<>(createdDishDTO, HttpStatus.CREATED);
-//        } catch (Exception e) {
-//            return new ResponseEntity<>("Error creating dish: " + e.getMessage(), HttpStatus.BAD_REQUEST);
-//        }
-//    }
 }

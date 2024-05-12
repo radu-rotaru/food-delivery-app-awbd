@@ -80,19 +80,6 @@ public class RestaurantServiceImpl implements RestaurantService{
         return modelMapper.map(savedRestaurant, RestaurantDTO.class);
     }
 
-//    public void update(RestaurantDTO restaurantDTO) {
-//        Optional<Restaurant> existingRestaurant = restaurantRepository.findById(restaurantDTO.getId());
-//        if (!existingRestaurant.isPresent()) {
-//            throw new RestaurantDoesNotExistException();
-//        }
-//        existingRestaurant.get().setName(restaurantDTO.getName());
-//        existingRestaurant.get().setAddress(restaurantDTO.getAddress());
-//        existingRestaurant.get().setOpeningHours(restaurantDTO.getOpeningHours());
-//
-//        restaurantRepository.save(existingRestaurant.get());
-//
-//    }
-
     @Override
     public void deleteById(Long id){restaurantRepository.deleteById(id);}
 }

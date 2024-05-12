@@ -1,6 +1,9 @@
 package web.javaproject.fooddeliveryapp.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+
 import java.util.List;
 
 @Entity
@@ -10,8 +13,13 @@ public class Dish {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
     private String name;
+
+    @Positive(message = "Quantity must be positive")
     private int quantity;
+
+    @Positive(message = "Price must be positive")
     private float price;
 
     @ManyToOne

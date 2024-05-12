@@ -3,6 +3,7 @@ package web.javaproject.fooddeliveryapp.dto;
 import java.util.List;
 
 public class OrderDTO {
+    private Long id;
     private RestaurantDTO restaurant;
     private ClientDTO client;
     private CourierDTO courier;
@@ -12,12 +13,21 @@ public class OrderDTO {
     public OrderDTO() {
     }
 
-    public OrderDTO(RestaurantDTO restaurant, ClientDTO client, CourierDTO courier, List<DishDTO> dishes, String status) {
+    public OrderDTO(Long id, RestaurantDTO restaurant, ClientDTO client, CourierDTO courier, List<DishDTO> dishes, String status) {
+        this.id = id;
         this.restaurant = restaurant;
         this.client = client;
         this.courier = courier;
         this.dishes = dishes;
         this.status = status;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public RestaurantDTO getRestaurant() {

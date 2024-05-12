@@ -1,23 +1,28 @@
 package web.javaproject.fooddeliveryapp.controller;
 
-import jakarta.validation.Valid;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import web.javaproject.fooddeliveryapp.dto.CourierReviewDTO;
-import web.javaproject.fooddeliveryapp.dto.CreateCourierReviewDTO;
 import web.javaproject.fooddeliveryapp.mapper.CourierReviewMapper;
+import web.javaproject.fooddeliveryapp.model.Courier;
 import web.javaproject.fooddeliveryapp.model.CourierReview;
+import web.javaproject.fooddeliveryapp.model.security.CustomUserDetails;
 import web.javaproject.fooddeliveryapp.service.CourierReviewService;
-import web.javaproject.fooddeliveryapp.util.ValidationCheck;
+import web.javaproject.fooddeliveryapp.service.CourierService;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
-@RestController
-@RequestMapping("/api/courier-reviews")
+@Controller
+@RequestMapping("/courier_review")
 @Validated
 public class CourierReviewController {
 
@@ -25,52 +30,108 @@ public class CourierReviewController {
 
     private final CourierReviewMapper courierReviewMapper;
 
+    private final CourierService courierService;
+
     @Autowired
-    public CourierReviewController(CourierReviewService courierReviewService, CourierReviewMapper courierReviewMapper) {
+    public CourierReviewController(CourierReviewService courierReviewService, CourierReviewMapper courierReviewMapper, CourierService courierService) {
         this.courierReviewService = courierReviewService;
         this.courierReviewMapper = courierReviewMapper;
+        this.courierService = courierService;
     }
 
-    @GetMapping("/courier/{id}")
-    public ResponseEntity<?> getCourierReviews(@PathVariable Long courierId) {
+    @RequestMapping("/edit/{id}")
+    public String edit(@PathVariable String id, Model model){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        GrantedAuthority firstAuthority = authentication.getAuthorities().stream().findFirst().orElse(null);
+        if(firstAuthority == null) {
+            return "access_denied";
+        }
+
+        CourierReview courierReview = courierReviewService.getCourierReview(Long.parseLong(id));
+
+        if(Objects.equals(firstAuthority.getAuthority(), "CLIENT")) {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+            if(!Objects.equals(courierReview.getClient().getId(), userDetails.getAssociatedId())) {
+                return "access_denied";
+            }
+        }
+
+        model.addAttribute("courierReview", courierReview);
+        return "courierReviewForm";
+    }
+
+    @PostMapping("")
+    public String saveOrUpdate(HttpServletRequest request, Model model){
         try {
-            List<CourierReview> courierReview = courierReviewService.getCourierReviewsByCourierId(courierId);
-            return new ResponseEntity<>(courierReview, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>("Error retrieving courier reviews: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+            Long id = Long.parseLong(request.getParameter("id"));
+            Long restaurantId = Long.parseLong(request.getParameter("orderId"));
+            Long clientId = Long.parseLong(request.getParameter("clientId"));
+            Long courierId = Long.parseLong(request.getParameter("courierId"));
+            int stars = Integer.parseInt(request.getParameter("stars"));
+
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            GrantedAuthority firstAuthority = authentication.getAuthorities().stream().findFirst().orElse(null);
+            if (firstAuthority == null) {
+                return "access_denied";
+            }
+
+            if (Objects.equals(firstAuthority.getAuthority(), "CLIENT")) {
+                CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+                if (!Objects.equals(clientId, userDetails.getAssociatedId())) {
+                    return "access_denied";
+                }
+            }
+
+            CourierReviewDTO courierReviewDTO = courierReviewMapper.toDto(courierReviewService.getCourierReview(id));
+            courierReviewService.save(courierReviewDTO);
+
+            return "redirect:/courier_review/courier/" + courierReviewDTO.getCourier().getId();
+        }
+        catch (Exception e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "errorView";
         }
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestBody @Valid CreateCourierReviewDTO createCourierReviewDTO, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            String errorMessage = ValidationCheck.extractValidationErrorMessage(bindingResult);
-            return ResponseEntity.badRequest().body(errorMessage);
+    @RequestMapping("/delete/{id}")
+    public String deleteById(@PathVariable String id){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        GrantedAuthority firstAuthority = authentication.getAuthorities().stream().findFirst().orElse(null);
+        if(firstAuthority == null) {
+            return "access_denied";
         }
 
+        CourierReview courierReview = courierReviewService.getCourierReview(Long.parseLong(id));
+        if(Objects.equals(firstAuthority.getAuthority(), "CLIENT")) {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+            if (!Objects.equals(courierReview.getClient().getId(), userDetails.getAssociatedId())) {
+                return "access_denied";
+            }
+        }
+
+        courierReviewService.deleteById(Long.valueOf(id));
+        return "redirect:/client";
+    }
+
+    @GetMapping("/courier/{courierId}")
+    public String getReviewByCourier(@PathVariable Long courierId, Model model) {
         try {
-            CourierReview courierReview = courierReviewService.createCourierReview(createCourierReviewDTO);
-            CourierReviewDTO courierReviewDTO = courierReviewMapper.toDto(courierReview);
+            List<CourierReview> courierReviews = courierReviewService.getCourierReviewsByCourierId(courierId);
+            List<CourierReviewDTO> courierReviewDTOs = courierReviewMapper.toDTOsList(courierReviews);
 
-            return new ResponseEntity<>(courierReviewDTO, HttpStatus.CREATED);
+            Optional<Courier> courier = courierService.getCourier(courierId);
+
+            model.addAttribute("courier", courier.get());
+            model.addAttribute("courierReviews", courierReviewDTOs);
+
+            return "courierReviews";
         } catch (Exception e) {
-            return new ResponseEntity<>("Error creating courier review: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+            model.addAttribute("errorMessage", e.getMessage());
+
+            return "errorView";
         }
     }
-//    @PostMapping("/create")
-//    public ResponseEntity<?> create(@RequestBody @Valid CreateCourierReviewDTO createCourierReviewDTO, BindingResult bindingResult) {
-//        if (bindingResult.hasErrors()) {
-//            String errorMessage = ValidationCheck.extractValidationErrorMessage(bindingResult);
-//            return ResponseEntity.badRequest().body(errorMessage);
-//        }
-//
-//        try {
-//            CourierReview courierReview = courierReviewService.createCourierReview(createCourierReviewDTO);
-//            CourierReviewDTO courierReviewDTO = courierReviewMapper.toDTO(courierReview);
-//
-//            return new ResponseEntity<>(courierReviewDTO, HttpStatus.CREATED);
-//        } catch (Exception e) {
-//            return new ResponseEntity<>("Error creating courier review: " + e.getMessage(), HttpStatus.BAD_REQUEST);
-//        }
-//    }
 }

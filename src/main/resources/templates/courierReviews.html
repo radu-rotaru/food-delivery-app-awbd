@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Food Delivery</title>
+
+    <script src="/webjars/jquery/3.6.0/jquery.min.js"></script>
+    <script src="/webjars/bootstrap/5.3.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/webjars/bootstrap/5.3.2/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/webjars/font-awesome/6.4.0/css/all.min.css"/>
+</head>
+<body>
+<div class="container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="nav-link" th:href="@{'/'}"> <i class="fas fa-home mx-1"></i>  </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto topnav">
+                <li class="nav-item">
+                    <a class="nav-link active" th:href="@{'/restaurant'}">Restaurants</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{'/client'}">Clients</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{'/couriers'}">Couriers</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn-primary" th:href="@{'/restaurant/form'}">
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn-primary" th:href="@{'/client/form'}">
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn-primary" th:href="@{'/courier/form'}">
+                    </a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ms-auto topnav">
+                <li class="nav-item">
+                    <form id="logout-form" th:action="@{/logout}" method="post">
+                        <button type="submit" class="nav-link btn-primary">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<h2> <span th:text="${courier.name}"></span>  </h2>
+<div>
+    <p> <span th:text="${courier.phoneNumber}"></span> </p>
+</div>
+
+<h3> Reviews </h3>
+<div class="container">
+    <table class="table table-hover ">
+        <thead class="thead-inverse">
+        <tr>
+            <th>Order id</th>
+            <th>Client</th>
+            <th>Stars</th>
+        </tr>
+        </thead>
+        <tr th:each="review, stat : ${courierReviews}"
+            th:class="${stat.odd}? 'table-light':''">
+            <td th:text="${review.order.id}">Order id</td>
+            <td th:text="${review.client.name}">Client</td>
+            <td th:text="${review.stars}">Stars</td>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>

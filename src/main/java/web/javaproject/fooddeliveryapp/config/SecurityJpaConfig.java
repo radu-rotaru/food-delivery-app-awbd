@@ -27,14 +27,31 @@ public class SecurityJpaConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .authorizeRequests(auth -> auth
-                        .requestMatchers("/order/create").hasRole("CLIENT")
-                        .requestMatchers("/order/all").hasAnyRole("CLIENT", "ADMIN")
-                        .requestMatchers("/restaurant/edit").hasAnyRole("ADMIN", "RESTAURANT")
-                        .requestMatchers("/restaurant/delete").hasAnyRole("ADMIN", "RESTAURANT")
-                        .requestMatchers(HttpMethod.PUT, "/order").hasAnyRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/order").hasAnyRole("ADMIN", "CLIENT")
-                        .anyRequest().authenticated()
+                .authorizeRequests(auth -> {
+                            try {
+                                auth
+                                        .requestMatchers("/", "/webjars/**", "/login", "/resources/**", "/perform_login").permitAll()
+                                        .requestMatchers("/order/create").hasRole("CLIENT")
+                                        .requestMatchers("/order/all").hasAnyRole("CLIENT", "ADMIN")
+                                        .requestMatchers("/restaurant/delete", "/restaurant/edit", "/dishes/edit").hasAnyRole("ADMIN", "RESTAURANT")
+                                        .requestMatchers(HttpMethod.POST, "/restaurant").hasAnyRole("ADMIN", "RESTAURANT")
+                                        .requestMatchers(HttpMethod.PUT, "/restaurant").hasAnyRole("ADMIN", "RESTAURANT")
+                                        .requestMatchers(HttpMethod.POST, "/dishes").hasAnyRole("ADMIN", "RESTAURANT")
+                                        .requestMatchers(HttpMethod.PUT, "/dishes").hasAnyRole("ADMIN", "RESTAURANT")
+                                        .requestMatchers("/dishes/delete").hasAnyRole("ADMIN", "RESTAURANT")
+                                        .requestMatchers(HttpMethod.PUT, "/order").hasAnyRole("ADMIN")
+                                        .requestMatchers(HttpMethod.DELETE, "/order").hasAnyRole("ADMIN", "CLIENT")
+                                        .requestMatchers(HttpMethod.POST, "/courier_review").hasAnyRole("ADMIN", "CLIENT")
+                                        .requestMatchers(HttpMethod.PUT, "/courier_review").hasAnyRole("ADMIN", "CLIENT")
+                                        .requestMatchers("/courier_review/delete").hasAnyRole("ADMIN", "CLIENT")
+                                        .requestMatchers("/client/edit").hasAnyRole("ADMIN", "CLIENT")
+                                        .requestMatchers(HttpMethod.PUT, "/client").hasAnyRole("ADMIN", "CLIENT")
+                                        .requestMatchers("/client/delete").hasAnyRole("ADMIN", "CLIENT")
+                                        .anyRequest().authenticated();
+                            } catch (Exception e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
                 )
                 .userDetailsService(userDetailsService)
                 .httpBasic(Customizer.withDefaults())

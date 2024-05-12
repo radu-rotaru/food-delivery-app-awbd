@@ -55,7 +55,6 @@ public class ClientController {
 
         clientService.save(client);
 
-
         return "redirect:/client" ;
     }
 
@@ -73,23 +72,4 @@ public class ClientController {
         model.addAttribute("clientsAll", clientsAll);
         return "clientForm";
     }
-
-
-//    @PostMapping("/create")
-//    public ResponseEntity<?> create(@RequestBody @Valid ClientDTO clientDTO, BindingResult bindingResult) {
-//        if (bindingResult.hasErrors()) {
-//            String errorMessage = ValidationCheck.extractValidationErrorMessage(bindingResult);
-//            return ResponseEntity.badRequest().body(errorMessage);
-//        }
-//
-//        try {
-//            Client clientEntity = clientMapper.toEntity(clientDTO);
-//            Client createdClient = clientService.createClient(clientEntity);
-//            ClientDTO createdClientDTO = clientMapper.toDTO(createdClient);
-//
-//            return new ResponseEntity<>(createdClientDTO, HttpStatus.CREATED);
-//        } catch (Exception e) {
-//            return new ResponseEntity<>("Error creating client: " + e.getMessage(), HttpStatus.BAD_REQUEST);
-//        }
-//    }
 }
