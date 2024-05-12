@@ -1,0 +1,65 @@
+package web.javaproject.fooddeliveryapp.repository;
+
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.ActiveProfiles;
+import web.javaproject.fooddeliveryapp.model.Restaurant;
+
+import java.util.Optional;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@ActiveProfiles("mysql")
+public class RestaurantRepositoryTest {
+    @Autowired
+    private RestaurantRepository restaurantRepository;
+
+    @Test
+    public void insertRestaurant() {
+        Restaurant restaurant = new Restaurant();
+        restaurant.setName("New Restaurant");
+        restaurant.setAddress("str.New, nr.10");
+        restaurant.setEmail("test@test.com");
+        restaurant.setOpeningHours("10-20");
+
+
+        restaurantRepository.save(restaurant);
+
+        Optional<Restaurant> restaurantOpt = restaurantRepository.findByEmail("test@test.com");
+        restaurant = restaurantOpt.get();
+        assertEquals("New Restaurant", restaurant.getName());
+        assertEquals("str.New, nr.10", restaurant.getAddress());
+        assertEquals("10-20", restaurant.getOpeningHours());
+    }
+
+    @Test
+    public void updateEmail(){
+        Optional<Restaurant> restaurantOpt = restaurantRepository.findById(1L);
+        Restaurant restaurant = restaurantOpt.get();
+        restaurant.setEmail("newEmail@test.com");
+        restaurant.setOpeningHours("10-20");
+
+        restaurantRepository.save(restaurant);
+
+        restaurantOpt = restaurantRepository.findById(1L);
+        restaurant = restaurantOpt.get();
+        Assertions.assertEquals("10-20", restaurant.getOpeningHours());
+        Assertions.assertEquals("newEmail@test.com", restaurant.getEmail());
+    }
+
+    @Test
+    public void deleteRestaurant() {
+        restaurantRepository.deleteById(1L);
+        Optional<Restaurant> restaurant = restaurantRepository.findById(1L);
+        assertTrue(restaurant.isEmpty());
+
+    }
+
+}
