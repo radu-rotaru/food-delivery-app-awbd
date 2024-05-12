@@ -12,5 +12,6 @@ insert into restaurants (id, name, address, email, opening_hours) values (3, 'Br
 insert into orders (id, restaurant_id, client_id, courier_id, status) values (1, 1, 1, 1, 'processed');
 
 insert into dishes (id, name, quantity, price, restaurant_id) values (1, 'Pizza', 500, 14.99, 1);
+insert into dishes (id, name, quantity, price, restaurant_id) values (2, 'Pasta', 500, 14.99, 1);
 
 insert into order_dish (order_id, dish_id) values (1, 1);

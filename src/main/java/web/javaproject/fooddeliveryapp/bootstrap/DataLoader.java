@@ -28,9 +28,9 @@ public class DataLoader implements CommandLineRunner {
 
            User admin = User.builder()
                    .username("admin")
-                    .password(passwordEncoder.encode("12345"))
-                    .authority(adminRole)
-                 .build();
+                   .password(passwordEncoder.encode("12345"))
+                   .authority(adminRole)
+                   .build();
 
             User client = User.builder()
                     .username("client")
@@ -40,19 +40,19 @@ public class DataLoader implements CommandLineRunner {
                     .build();
 
             User restaurant = User.builder()
-                   .username("restaurant")
-                   .password(passwordEncoder.encode("12345"))
-                   .associatedId(1L)
-                   .authority(restaurantRole)
+                    .username("restaurant")
+                    .password(passwordEncoder.encode("12345"))
+                    .associatedId(1L)
+                    .authority(restaurantRole)
                     .build();
 
 
           User courier = User.builder()
-                   .username("courier")
+                  .username("courier")
                   .password(passwordEncoder.encode("12345"))
-                    .associatedId(1L)
-                    .authority(courierRole)
-                   .build();
+                  .associatedId(1L)
+                  .authority(courierRole)
+                  .build();
 
            userRepository.save(admin);
            userRepository.save(client);

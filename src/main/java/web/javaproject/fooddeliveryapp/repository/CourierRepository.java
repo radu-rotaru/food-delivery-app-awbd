@@ -7,6 +7,7 @@ import java.util.Optional;
 
 public interface CourierRepository extends PagingAndSortingRepository<Courier, Long> {
     Optional<Courier> findByPhoneNumber(String phoneNumber);
+    Optional<Courier> findFirstByAvailable(Boolean available);
     Optional<Courier> findById(Long id);
     void deleteById(Long id);
     Courier save(Courier courier);
