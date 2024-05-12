@@ -8,9 +8,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import web.javaproject.fooddeliveryapp.dto.ClientDTO;
 import web.javaproject.fooddeliveryapp.dto.CourierDTO;
-import web.javaproject.fooddeliveryapp.model.Client;
+import web.javaproject.fooddeliveryapp.mapper.CourierMapper;
 import web.javaproject.fooddeliveryapp.model.Courier;
 import web.javaproject.fooddeliveryapp.service.CourierService;
 
@@ -22,9 +21,12 @@ public class CourierController {
 
     CourierService courierService;
 
-    public CourierController(CourierService courierService) {
+    CourierMapper courierMapper;
+
+    public CourierController(CourierMapper courierMapper, CourierService courierService) {
 
         this.courierService = courierService;
+        this.courierMapper = courierMapper;
     }
 
     @RequestMapping("")
@@ -34,12 +36,19 @@ public class CourierController {
         return "courierList";
     }
 
+    @RequestMapping("/edit/{id}")
+    public String edit(@PathVariable String id, Model model){
+        model.addAttribute("courier", courierService.findById(Long.valueOf(id)));
+        return "courierForm";
+    }
+
     @PostMapping("")
     public String saveOrUpdate(@Valid @ModelAttribute CourierDTO courier,
                                BindingResult bindingResult,
                                Model model
     ){
         if (bindingResult.hasErrors()){
+            System.out.println(bindingResult.getAllErrors());
             model.addAttribute("courier", courier);
             return "courierForm";
         }
@@ -57,7 +66,7 @@ public class CourierController {
     }
 
     @RequestMapping("/form")
-    public String restaurantForm(Model model){
+    public String courierForm(Model model){
         Courier courier = new Courier();
         model.addAttribute("courier", courier);
         List <CourierDTO> couriersAll = courierService.findAll();

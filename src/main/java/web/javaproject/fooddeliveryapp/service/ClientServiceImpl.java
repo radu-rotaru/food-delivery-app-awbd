@@ -8,6 +8,7 @@ import web.javaproject.fooddeliveryapp.dto.RestaurantDTO;
 import web.javaproject.fooddeliveryapp.exception.ClientAlreadyExistsException;
 import web.javaproject.fooddeliveryapp.exception.ClientDoesNotExistException;
 import web.javaproject.fooddeliveryapp.exception.CourierDoesNotExistException;
+import web.javaproject.fooddeliveryapp.exception.RestaurantDoesNotExistException;
 import web.javaproject.fooddeliveryapp.model.Client;
 import web.javaproject.fooddeliveryapp.model.Restaurant;
 import web.javaproject.fooddeliveryapp.repository.ClientRepository;
@@ -53,6 +54,16 @@ public class ClientServiceImpl implements ClientService {
         }
 
         return client.get();
+    }
+
+    @Override
+    public ClientDTO findById(Long l) {
+        Optional<Client> clientOptional = clientRepository.findById(l);
+        if (!clientOptional.isPresent()) {
+            throw new ClientDoesNotExistException();
+            //throw new RuntimeException("Product not found!");
+        }
+        return modelMapper.map(clientOptional.get(), ClientDTO.class);
     }
 
     @Override

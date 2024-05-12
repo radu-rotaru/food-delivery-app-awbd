@@ -4,7 +4,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import web.javaproject.fooddeliveryapp.dto.RestaurantDTO;
-import web.javaproject.fooddeliveryapp.exception.OrderDoesNotExistException;
 import web.javaproject.fooddeliveryapp.exception.RestaurantAlreadyExistsException;
 import web.javaproject.fooddeliveryapp.exception.RestaurantDoesNotExistException;
 import web.javaproject.fooddeliveryapp.model.Restaurant;
@@ -80,6 +79,19 @@ public class RestaurantServiceImpl implements RestaurantService{
         Restaurant savedRestaurant = restaurantRepository.save(modelMapper.map(restaurant, Restaurant.class));
         return modelMapper.map(savedRestaurant, RestaurantDTO.class);
     }
+
+//    public void update(RestaurantDTO restaurantDTO) {
+//        Optional<Restaurant> existingRestaurant = restaurantRepository.findById(restaurantDTO.getId());
+//        if (!existingRestaurant.isPresent()) {
+//            throw new RestaurantDoesNotExistException();
+//        }
+//        existingRestaurant.get().setName(restaurantDTO.getName());
+//        existingRestaurant.get().setAddress(restaurantDTO.getAddress());
+//        existingRestaurant.get().setOpeningHours(restaurantDTO.getOpeningHours());
+//
+//        restaurantRepository.save(existingRestaurant.get());
+//
+//    }
 
     @Override
     public void deleteById(Long id){restaurantRepository.deleteById(id);}

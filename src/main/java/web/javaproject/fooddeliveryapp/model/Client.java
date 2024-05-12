@@ -23,10 +23,10 @@ public class Client {
     @NotBlank(message = "Address cannot be blank")
     private String address;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "client", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "client")
     private List<Order> orders;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "client", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "client")
     private List<CourierReview> courierReviews;
 
     public Client() {}

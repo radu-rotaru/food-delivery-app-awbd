@@ -4,7 +4,11 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import web.javaproject.fooddeliveryapp.dto.CourierDTO;
+import web.javaproject.fooddeliveryapp.dto.RestaurantDTO;
+import web.javaproject.fooddeliveryapp.exception.CourierDoesNotExistException;
+import web.javaproject.fooddeliveryapp.exception.RestaurantDoesNotExistException;
 import web.javaproject.fooddeliveryapp.model.Courier;
+import web.javaproject.fooddeliveryapp.model.Restaurant;
 import web.javaproject.fooddeliveryapp.repository.CourierRepository;
 
 import java.util.LinkedList;
@@ -50,5 +54,15 @@ public class CourierServiceImpl implements CourierService{
 
     @Override
     public void deleteById(Long id){courierRepository.deleteById(id);}
+
+    @Override
+    public CourierDTO findById(Long l) {
+        Optional<Courier> courierOptional = courierRepository.findById(l);
+        if (!courierOptional.isPresent()) {
+            throw new CourierDoesNotExistException();
+            //throw new RuntimeException("Product not found!");
+        }
+        return modelMapper.map(courierOptional.get(), CourierDTO.class);
+    }
 
 }

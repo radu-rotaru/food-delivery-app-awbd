@@ -1,6 +1,8 @@
 package web.javaproject.fooddeliveryapp.model.security;
 
 import jakarta.persistence.*;
+
+import java.util.HashSet;
 import java.util.Set;
 import lombok.*;
 
@@ -34,4 +36,11 @@ public class User {
     private Boolean credentialsNonExpired = true;
     @Builder.Default
     private Boolean enabled = true;
+
+    public void addAuthority(Authority authority) {
+        if (this.authorities == null) {
+            this.authorities = new HashSet<>();
+        }
+        this.authorities.add(authority);
+    }
 }
