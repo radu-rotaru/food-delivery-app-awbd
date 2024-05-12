@@ -9,9 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import web.javaproject.fooddeliveryapp.dto.ClientDTO;
-import web.javaproject.fooddeliveryapp.dto.RestaurantDTO;
+import web.javaproject.fooddeliveryapp.mapper.ClientMapper;
 import web.javaproject.fooddeliveryapp.model.Client;
-import web.javaproject.fooddeliveryapp.model.Restaurant;
 import web.javaproject.fooddeliveryapp.service.ClientService;
 
 import java.util.List;
@@ -22,9 +21,12 @@ public class ClientController {
 
     ClientService clientService;
 
-    public ClientController(ClientService clientService) {
+    ClientMapper clientMapper;
+
+    public ClientController(ClientMapper clientMapper, ClientService clientService) {
 
         this.clientService = clientService;
+        this.clientMapper = clientMapper;
     }
 
     @RequestMapping("")
@@ -33,6 +35,12 @@ public class ClientController {
             model.addAttribute("clients", clients);
             return "clientList";
         }
+
+    @RequestMapping("/edit/{id}")
+    public String edit(@PathVariable String id, Model model){
+        model.addAttribute("client", clientService.findById(Long.valueOf(id)));
+        return "clientForm";
+    }
 
 
     @PostMapping("")
@@ -58,7 +66,7 @@ public class ClientController {
     }
 
     @RequestMapping("/form")
-    public String restaurantForm(Model model){
+    public String clientForm(Model model){
         Client client = new Client();
         model.addAttribute("client", client);
         List <ClientDTO> clientsAll = clientService.findAll();

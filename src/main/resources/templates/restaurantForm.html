@@ -23,23 +23,22 @@
                     <a class="nav-link " th:href="@{'/restaurant'}">Restaurants</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{'/client'}">Clients</a>
+                    <a class="nav-link " th:href="@{'/client'}">Clients</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{'/courier'}">Couriers</a>
+                    <a class="nav-link " th:href="@{'/courier'}">Couriers</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link btn-primary" th:href="@{'/restaurant/form'}">
                         <i class="fas fa-plus-circle"></i> Sell
                     </a>
                 </li>
-            </ul>
-            <ul class="navbar-nav ms-auto topnav">
                 <li class="nav-item">
                     <a class="nav-link btn-primary" th:href="@{'/login'}">
                         <i class="fas fa-sign-in-alt"></i> Sign In
                     </a>
                 </li>
+
                 <li class="nav-item">
                     <form id="logout-form" th:action="@{/logout}" method="post">
                         <button type="submit" class="nav-link btn-primary">
@@ -53,9 +52,6 @@
 </div>
 <form enctype="multipart/form-data" method="post" th:action="@{/restaurant}" th:object="${restaurant}">
     <input th:field="*{id}" type="hidden"/>
-    <input th:field="*{name}" type="hidden"/>
-    <input th:field="*{address}" type="hidden"/>
-    <input th:field="*{openingHours}" type="hidden"/>
     <div class="container" style="margin-top: 50px">
         <div class="panel panel-default">
             <div  class="panel-heading">

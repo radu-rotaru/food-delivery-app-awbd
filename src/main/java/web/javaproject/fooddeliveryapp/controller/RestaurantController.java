@@ -10,16 +10,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import web.javaproject.fooddeliveryapp.dto.CreateRestaurantDTO;
-import web.javaproject.fooddeliveryapp.dto.GetRestaurantDTO;
 import web.javaproject.fooddeliveryapp.dto.RestaurantDTO;
-import web.javaproject.fooddeliveryapp.mapper.RestaurantMapper;
 import web.javaproject.fooddeliveryapp.model.Restaurant;
 import web.javaproject.fooddeliveryapp.model.security.CustomUserDetails;
 import web.javaproject.fooddeliveryapp.service.RestaurantService;
-import web.javaproject.fooddeliveryapp.util.ValidationCheck;
 import org.springframework.ui.Model;
+
 
 import java.util.List;
 import java.util.Objects;
@@ -29,11 +25,8 @@ import java.util.Objects;
 public class RestaurantController {
     RestaurantService restaurantService;
 
-    RestaurantMapper restaurantMapper;
-
-    public RestaurantController(RestaurantMapper restaurantMapper, RestaurantService restaurantService) {
+    public RestaurantController(RestaurantService restaurantService) {
         this.restaurantService = restaurantService;
-        this.restaurantMapper = restaurantMapper;
     }
 
     @RequestMapping("")
@@ -115,8 +108,6 @@ public class RestaurantController {
     public String restaurantForm(Model model){
         Restaurant restaurant = new Restaurant();
         model.addAttribute("restaurant", restaurant);
-        List <RestaurantDTO> restaurantsAll = restaurantService.findAll();
-        model.addAttribute("restaurantsAll", restaurantsAll);
         return "restaurantForm";
     }
 }

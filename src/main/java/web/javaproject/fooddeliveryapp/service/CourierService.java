@@ -8,6 +8,7 @@ import java.util.Optional;
 
 public interface CourierService {
     List<CourierDTO> findAll();
+    CourierDTO findById(Long id);
     Optional<Courier> getCourier(Long id);
     public Boolean doesExist(Long courierId);
     CourierDTO save(CourierDTO courierDTO);

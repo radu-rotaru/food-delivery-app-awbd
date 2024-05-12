@@ -30,16 +30,18 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link btn-primary" th:href="@{'/restaurant/form'}">
-                        <i class="fas fa-plus-circle"></i> Sell
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn-primary" th:href="@{'/client/form'}">
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn-primary" th:href="@{'/courier/form'}">
                     </a>
                 </li>
             </ul>
             <ul class="navbar-nav ms-auto topnav">
-                <li class="nav-item">
-                    <a class="nav-link btn-primary" th:href="@{'/login'}">
-                        <i class="fas fa-sign-in-alt"></i> Sign In
-                    </a>
-                </li>
                 <li class="nav-item">
                     <form id="logout-form" th:action="@{/logout}" method="post">
                         <button type="submit" class="nav-link btn-primary">
@@ -67,8 +69,8 @@
             <td th:text="${client.name}">Name</td>
             <td th:text="${client.email}">Email </td>
             <td th:text="${client.address}">Address</td>
-            <td><a href="#" th:href="@{'/client/edit/' + ${client.name}}"><i class="fa-solid fa-pen"></i></a></td>
-            <td><a href="#" th:href="@{'/client/delete/' + ${client.name}}"><i class="fa-solid fa-trash"></i></a></td>
+            <td><a href="#" th:href="@{'/client/edit/' + ${client.id}}"><i class="fa-solid fa-pen"></i></a></td>
+            <td><a href="#" th:href="@{'/client/delete/' + ${client.id}}"><i class="fa-solid fa-trash"></i></a></td>
         </tr>
 
     </table>

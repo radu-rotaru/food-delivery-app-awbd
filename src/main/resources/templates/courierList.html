@@ -29,22 +29,19 @@
                     <a class="nav-link" th:href="@{'/courier'}">Couriers</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link btn-primary" th:href="@{'/product/form'}">
-                        <i class="fas fa-plus-circle"></i> Sell
+                    <a class="nav-link btn-primary" th:href="@{'/restaurant/form'}">
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn-primary" th:href="@{'/client/form'}">
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn-primary" th:href="@{'/courier/form'}">
                     </a>
                 </li>
             </ul>
             <ul class="navbar-nav ms-auto topnav">
-                <li class="nav-item">
-                    <a class="nav-link btn-primary" th:href="@{'/login'}">
-                        <i class="fas fa-sign-in-alt"></i> Sign In
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link btn-primary" th:href="@{'/register'}">
-                        <i class="fas fa-user-plus"></i> Register
-                    </a>
-                </li>
                 <li class="nav-item">
                     <form id="logout-form" th:action="@{/logout}" method="post">
                         <button type="submit" class="nav-link btn-primary">
@@ -68,8 +65,8 @@
             th:class="${stat.odd}? 'table-light':''">
             <td th:text="${courier.name}">Name </td>
             <td th:text="${courier.phoneNumber}">Phone Number </td>
-            <td><a href="#" th:href="@{'/courier/edit/' + ${courier.name}}"><i class="fa-solid fa-pen"></i></a></td>
-            <td><a href="#" th:href="@{'/courier/delete/' + ${courier.name}}"><i class="fa-solid fa-trash"></i></a></td>
+            <td><a href="#" th:href="@{'/courier/edit/' + ${courier.id}}"><i class="fa-solid fa-pen"></i></a></td>
+            <td><a href="#" th:href="@{'/courier/delete/' + ${courier.id}}"><i class="fa-solid fa-trash"></i></a></td>
         </tr>
 
     </table>
