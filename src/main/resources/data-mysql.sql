@@ -10,8 +10,18 @@ insert into restaurants (id, name, address, email, opening_hours) values (2, 'He
 insert into restaurants (id, name, address, email, opening_hours) values (3, 'Brotacei', 'str.Aviatei, nr.14', 'brotecei@test.com', '10-24');
 
 insert into orders (id, restaurant_id, client_id, courier_id, status) values (1, 1, 1, 1, 'processed');
+insert into orders (id, restaurant_id, client_id, courier_id, status) values (2, 1, 1, 1, 'processed');
+insert into orders (id, restaurant_id, client_id, courier_id, status) values (3, 1, 2, 2, 'processed');
 
 insert into dishes (id, name, quantity, price, restaurant_id) values (1, 'Pizza', 500, 14.99, 1);
-insert into dishes (id, name, quantity, price, restaurant_id) values (2, 'Pasta', 500, 14.99, 1);
+insert into dishes (id, name, quantity, price, restaurant_id) values (2, 'Paste', 500, 20.99, 1);
+insert into dishes (id, name, quantity, price, restaurant_id) values (3, 'Inghetata', 200, 15.99, 1);
 
 insert into order_dish (order_id, dish_id) values (1, 1);
+insert into order_dish (order_id, dish_id) values (2, 2);
+insert into order_dish (order_id, dish_id) values (3, 3);
+
+insert into courier_reviews(id, stars, client_id, courier_id, order_id) values(1, 4, 1, 1, 1);
+insert into courier_reviews(id, stars, client_id, courier_id, order_id) values (2, 5, 2, 1, 2);
+insert into courier_reviews(id, stars, client_id, courier_id, order_id) values(3, 3, 3, 2, 3);
+
