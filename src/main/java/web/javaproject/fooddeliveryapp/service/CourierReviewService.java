@@ -3,13 +3,10 @@ package web.javaproject.fooddeliveryapp.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
-import web.javaproject.fooddeliveryapp.dto.CreateCourierReviewDTO;
+import web.javaproject.fooddeliveryapp.dto.CourierReviewDTO;
 import web.javaproject.fooddeliveryapp.exception.*;
 import web.javaproject.fooddeliveryapp.mapper.CourierReviewMapper;
-import web.javaproject.fooddeliveryapp.model.Client;
-import web.javaproject.fooddeliveryapp.model.Courier;
-import web.javaproject.fooddeliveryapp.model.CourierReview;
-import web.javaproject.fooddeliveryapp.model.Order;
+import web.javaproject.fooddeliveryapp.model.*;
 import web.javaproject.fooddeliveryapp.repository.CourierReviewRepository;
 
 import java.util.List;
@@ -37,30 +34,6 @@ public class CourierReviewService {
         this.courierReviewMapper = courierReviewMapper;
     }
 
-    public CourierReview createCourierReview(CreateCourierReviewDTO createCourierReviewDTO) {
-        Client client = clientService.getClient(createCourierReviewDTO.getClientId());
-
-        Optional<Courier> courier = courierService.getCourier(createCourierReviewDTO.getCourierId());
-        if (courier.isEmpty()) {
-            throw new CourierDoesNotExistException();
-        }
-
-        Order order = orderService.getOrder(createCourierReviewDTO.getOrderId());
-
-        Optional<CourierReview> existingCourierReview = courierReviewRepository.findByClientIdAndCourierIdAndOrderId(createCourierReviewDTO.getClientId(), createCourierReviewDTO.getCourierId(), createCourierReviewDTO.getOrderId());
-
-        if (existingCourierReview.isPresent()) {
-            throw new CourierReviewAlreadyExistsException();
-        }
-
-        if (order.getClient() != client || order.getCourier() != courier.get()) {
-           throw new OrderIsNotValidException();
-        }
-
-        CourierReview courierReview = courierReviewMapper.toCourierReviewFromCreated(createCourierReviewDTO);
-        return courierReviewRepository.save(courierReview);
-    }
-
     public List<CourierReview> getCourierReviewsByCourierId(Long courierId) {
         Optional<Courier> courier = courierService.getCourier(courierId);
         if (courier.isPresent()) {
@@ -69,4 +42,21 @@ public class CourierReviewService {
             throw new CourierDoesNotExistException();
         }
     }
+
+    public CourierReview getCourierReview(Long id) {
+        Optional<CourierReview> courierReview = courierReviewRepository.findById(id);
+
+        if (courierReview.isPresent()) {
+            return courierReview.get();
+        } else {
+            throw new CourierDoesNotExistException();
+        }
+    }
+
+    public CourierReviewDTO save (CourierReviewDTO courierReviewDTO) {
+        CourierReview savedCourierReview = courierReviewRepository.save(courierReviewMapper.toCourierReview(courierReviewDTO));
+        return courierReviewMapper.toDto(savedCourierReview);
+    }
+
+    public void deleteById(Long id){courierReviewRepository.deleteById(id);}
 }

@@ -7,7 +7,7 @@ import web.javaproject.fooddeliveryapp.model.Dish;
 
 import java.util.List;
 
-@Mapper (componentModel = "spring")
+@Mapper (componentModel = "spring", uses = {RestaurantMapper.class})
 public interface DishMapper {
     DishDTO toDTO(Dish dish);
     List<DishDTO> toDTOsList(List<Dish> dishes);

@@ -27,13 +27,13 @@ public class DishServiceTest {
     private DishRepository dishRepository;
 
     @Mock
-    private RestaurantService restaurantService;
+    private RestaurantServiceImpl restaurantService;
 
     @Mock
     private DishMapper dishMapper;
 
     @InjectMocks
-    private DishService dishService;
+    private DishServiceImpl dishService;
 
     @Test
     public void testGetDish_ExistingDish() {

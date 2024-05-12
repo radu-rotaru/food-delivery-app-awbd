@@ -35,7 +35,8 @@ CREATE TABLE courier_reviews (
      id BIGINT AUTO_INCREMENT PRIMARY KEY,
      stars BIGINT,
      courier_id BIGINT,
-     client_id BIGINT
+     client_id BIGINT,
+     order_id BIGINT
 );
 
 CREATE TABLE dishes (

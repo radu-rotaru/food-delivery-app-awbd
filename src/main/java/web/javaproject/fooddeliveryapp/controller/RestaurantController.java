@@ -48,7 +48,7 @@ public class RestaurantController {
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
             if(Long.parseLong(id) != userDetails.getAssociatedId()) {
-                return "acess_denied";
+                return "access_denied";
             }
         }
         model.addAttribute("restaurant", restaurantService.findById(Long.valueOf(id)));
@@ -70,7 +70,7 @@ public class RestaurantController {
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
             if(restaurant.getId() != userDetails.getAssociatedId()) {
-                return "acess_denied";
+                return "access_denied";
             }
         }
 
@@ -96,7 +96,7 @@ public class RestaurantController {
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
             if(Long.parseLong(id) != userDetails.getAssociatedId()) {
-                return "acess_denied";
+                return "access_denied";
             }
         }
 

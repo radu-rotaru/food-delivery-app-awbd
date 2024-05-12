@@ -4,11 +4,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import web.javaproject.fooddeliveryapp.dto.UserDto;
+import web.javaproject.fooddeliveryapp.exception.UserAlreadyExistsException;
 import web.javaproject.fooddeliveryapp.mapper.UserMapper;
 import web.javaproject.fooddeliveryapp.model.security.Authority;
 import web.javaproject.fooddeliveryapp.model.security.User;
 import web.javaproject.fooddeliveryapp.repository.security.AuthorityRepository;
 import web.javaproject.fooddeliveryapp.repository.security.UserRepository;
+
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -29,6 +32,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto save (UserDto user) {
+        Optional<User> userEntity = userRepository.findByUsername(user.getUsername());
+
+        if(userEntity.isPresent()) {
+            throw new UserAlreadyExistsException();
+        }
+
         Authority authority = authorityRepository.findByRole(user.getRole());
         User newUser = User.builder()
                 .username(user.getUsername())
